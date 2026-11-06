@@ -1,0 +1,9 @@
+{
+  "userIgnoreFilters": [
+    "data/",
+    "scripts/",
+    "docs/",
+    "docs_legacy/",
+    "tests/"
+  ]
+}

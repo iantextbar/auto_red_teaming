@@ -1,7 +1,29 @@
 [project]
 name = "auto-red-teaming"
 version = "0.1.0"
-description = "Add your description here"
+description = "Obsidian research vault on AI-assisted coding, with the scripts that maintain it"
 readme = "README.md"
 requires-python = ">=3.12"
-dependencies = []
+dependencies = [
+    "httpx>=0.28.1",
+    "pymupdf>=1.26,<2",
+    "python-frontmatter>=1.3.0",
+    "trafilatura>=2.3.1",
+]
+
+[dependency-groups]
+dev = [
+    "pytest>=9.1.1",
+    "ruff>=0.17.1",
+]
+
+[tool.ruff]
+line-length = 100
+src = ["scripts", "tests"]
+
+[tool.ruff.lint]
+select = ["E", "F", "I", "B", "UP"]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+pythonpath = ["scripts"]
