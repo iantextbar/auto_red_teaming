@@ -276,3 +276,27 @@ Finding sources on the web stays out of scope: every source enters because a con
   dated archives of old snapshots, `--ignore-robots`, detecting single-page apps other than by word
   count (under 50 words is flagged). A URL that serves a PDF is flagged, with a pointer to
   `references/pdfs/`.
+
+## 2026-11-11 — new project
+
+**D36. The vault adapted to automated red teaming and vulnerability detection.** The repository was
+copied from the AI-assisted coding vault and repurposed. New topic: automated red teaming and
+vulnerability detection for AI-generated software. Two deliverables: a paper (insecurity of
+AI-generated code; detection and red-teaming methods and their benchmarks; compliance) and a
+product, automatic vulnerability detection and compliance checking for AI-generated code. The
+survey strand is dropped. Tooling, schema and rules carry over unchanged; only the project's
+identity changed in `CLAUDE.md`, `README.md` and `project.md`. The previous project's pilot and
+sprint logs were removed from `roadmap.md`, since they describe notes not in this vault; D1–D35 are
+kept, because they are still the reasons the tooling is the way it is.
+
+**D37. Decisions that cite the previous corpus.** D13 (the pilot set) and D16 (the size threshold,
+justified by that corpus's sprint 1) name PDFs not in this vault. What they decided still holds;
+their examples do not describe this corpus. D33 (survey-instrument sources) has no use while there
+is no survey strand, and is not reversed — it applies again if one returns.
+
+**D38. `interest` in this domain.** Evidence on the security of AI-generated code is often
+published by companies that sell what is measured: the models, the coding assistants, or the
+security scanners. A study or benchmark from such a company, about its own kind of product, is
+`vendor`. An academic benchmark that evaluates vendors' models is `independent`. As before, the
+field is filled only when the relation is evident, and left `undetermined` otherwise (`CLAUDE.md`
+§3, whose wording was updated to match).

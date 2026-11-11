@@ -1,10 +1,11 @@
 # CLAUDE.md — operating contract for the vault
 
-This repository is a research knowledge base on **AI-assisted coding**, maintained by several
-contributors. It supports a paper with three strands: the history of AI-assisted coding, the trends
-and future patterns that history points to, and a survey of how workers at a large Brazilian bank
-see the use of AI in their workflows. This file defines how you work here. These are not
-suggestions.
+This repository is a research knowledge base on **automated red teaming and vulnerability detection
+for AI-generated software**, maintained by several contributors. It feeds two deliverables: a paper
+(how insecure AI-generated code is; the methods and benchmarks for detecting its vulnerabilities and
+red-teaming it; compliance with secure-coding standards) and a product that automatically detects
+vulnerabilities and checks compliance in AI-generated code. This file defines how you work here.
+These are not suggestions.
 
 ## 1. The dividing line
 
@@ -144,8 +145,9 @@ The claims are what the corpus-level work reads: a script collects them into a c
 debates are mapped from that index instead of from the full notes. So each claim has to stand on
 its own:
 
-- one line, one claim, with its anchor: `- Experienced developers were slower with AI tools on
-  their own repositories (p. 4)` (written on one line in the note, §6.2);
+- one line, one claim, with its anchor: `- On the study's benchmark, the detector's recall fell for
+  vulnerability classes outside those it was tuned on (p. 4)` (a format example, not a real source;
+  written on one line in the note, §6.2);
 - the source's own **modality** — "suggests" stays "suggests", "may" stays "may";
 - the source's own **scope** — population, task, setting, period — when the claim depends on it;
 - the claims the source actually makes, not the ones a reader would draw from it.
@@ -169,8 +171,11 @@ leave them unresolved.
 **`source_type` and `interest`** are largely factual — which outlet published it, and whether the
 publisher sells what was measured. You **may** fill them when the relation is objective and evident
 (arXiv → `preprint`; GitHub on Copilot → `vendor`), and leave them `undetermined` / empty in any
-doubtful case. This matters more here than in most fields: a large share of the evidence on
-AI-assisted coding is published by the companies that build the tools. Filling these fields does
+doubtful case. This matters more here than in most fields: much of the evidence on the security of
+AI-generated code is published by the companies that sell what is measured — the models, the
+coding assistants or the security scanners. A study by such a company about its own kind of
+product is `vendor`; an academic benchmark that evaluates vendors' models is `independent`
+(D38). Filling these fields does
 **not** contradict the rule that judgement is human: `#evidence/` remains the contributors' alone.
 `source_type` mirrors the `#source/` facet.
 
