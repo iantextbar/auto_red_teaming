@@ -13,7 +13,12 @@ snapshot:
 status: summarised
 summarised_by: claude-sonnet-5-5
 reviewed_by:
-tags: []
+tags:
+  - topic/offensive-ai-capabilities
+  - topic/security-benchmarks
+  - topic/vulnerability-detection
+  - method/benchmark-evaluation
+  - method/execution-based-evaluation
 ---
 
 ## Stated by the source

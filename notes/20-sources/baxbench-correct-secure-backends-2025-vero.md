@@ -13,7 +13,11 @@ snapshot:
 status: summarised
 summarised_by: claude-sonnet-5-5
 reviewed_by:
-tags: []
+tags:
+  - topic/ai-code-security
+  - topic/security-benchmarks
+  - method/benchmark-evaluation
+  - method/execution-based-evaluation
 ---
 
 ## Stated by the source

@@ -13,7 +13,11 @@ snapshot:
 status: summarised
 summarised_by: claude-sonnet-5-5
 reviewed_by:
-tags: []
+tags:
+  - topic/package-hallucination
+  - topic/supply-chain-security
+  - method/replication
+  - method/benchmark-evaluation
 ---
 
 ## Stated by the source

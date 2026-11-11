@@ -13,7 +13,10 @@ snapshot:
 status: summarised
 summarised_by: claude-sonnet-5-5
 reviewed_by:
-tags: []
+tags:
+  - topic/ai-code-security
+  - topic/developer-behaviour
+  - method/user-study
 ---
 
 ## Stated by the source
