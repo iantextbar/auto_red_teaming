@@ -2,15 +2,21 @@
 
 ## What it is
 
-A research knowledge base on **AI-assisted coding**, kept as an Obsidian vault versioned in git. It
-supports a paper with three strands:
+A research knowledge base on **automated red teaming and vulnerability detection for AI-generated
+software**, kept as an Obsidian vault versioned in git. It feeds two deliverables:
 
-1. **History** — how AI assistance in programming developed, from early program synthesis to
-   today's coding agents.
-2. **Trends and future patterns** — the directions the literature takes and the positions it holds
-   on where this is going.
-3. **Survey** — a questionnaire validating the view of workers at a large Brazilian bank on the use
-   of AI in their workflows.
+1. **A paper**, with three strands:
+   - **Insecurity of AI-generated code** — how often, and in which ways, code written by AI
+     assistants and agents is vulnerable, and under what conditions.
+   - **Detection and red teaming** — the methods for finding vulnerabilities automatically
+     (static analysis, LLM-based review, fuzzing, agentic red teaming), and the benchmarks and
+     datasets that measure them.
+   - **Compliance** — checking code against secure-coding standards, vulnerability taxonomies
+     (CWE, OWASP) and organisational policies.
+2. **A product** — automatic vulnerability detection and compliance checking for AI-generated
+   code, designed from what the literature reports.
+
+The strands are a starting proposal; contributors refine them as the corpus grows.
 
 The vault is fed by:
 
@@ -39,6 +45,10 @@ is built; `roadmap.md` says in what order; `decisions.md` says why, and what was
   stakeholder), research question served.
 - **Visible authorship and review.** Who wrote what, and which model, is recorded inside each file;
   what no human has reviewed yet is always listable.
+- **Material the product can be designed from.** The detection techniques the literature reports,
+  the benchmarks and datasets that could evaluate the product, the vulnerability classes (CWE) the
+  sources measure, and how each source says its results were evaluated. This is reporting, like
+  the rest; choosing the product's design stays with the contributors.
 - **Token-efficient operation.** Deterministic work runs in scripts; model tiers are pinned in the
   repository, so cheaper models do the work they are fit for without anyone switching models by
   hand.
@@ -49,6 +59,9 @@ is built; `roadmap.md` says in what order; `decisions.md` says why, and what was
   protects no one. What stays with the contributors is judgement: what the evidence is worth, what
   it implies, which side of a debate is right.
 - **A reference manager.** Metadata sufficient to cite, not a replacement for Zotero.
+- **The product itself.** The vault is not the product's codebase or its specification. Product
+  requirements enter the vault as positions documents written on a contributor's brief, or as the
+  contributors' own work; the product is built elsewhere.
 - **Atomic concept notes.** The previous project generated one-idea-per-note concepts. They came out
   one or two lines long, multiplied without limit, were extracted one paper at a time and so rarely
   linked papers. What proved useful was the large summary of positions across the literature. Key
@@ -76,13 +89,14 @@ not short from long.
 
 Interpretation on explicit request is legitimate work for Claude — it just never happens in passing.
 
-## Survey strand
+## Product strand
 
-The survey is a separate track with its own specification, to be written when the work reaches it
-(`roadmap.md`, phase 7). It has to settle at least: the instrument and how it is versioned; how
-responses are collected and anonymised under the LGPD; where anonymised data lives and what never
-enters the repository; and how the survey's questions connect to the debates mapped from the
-literature.
+The product is a separate track with its own specification, to be written when the work reaches it
+(`roadmap.md`, phase 7). It has to settle at least: the requirements, drawn from positions
+documents written with a product lens; which benchmarks and datasets found in the corpus will
+evaluate it; and where it lives (repository, stack). The vault's link to the product runs through
+those positions documents and the debates they draw on; the line in `CLAUDE.md` §1 holds — Claude
+reports what the literature offers a design, contributors decide the design.
 
 ## Directory structure
 
