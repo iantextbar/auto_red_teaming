@@ -300,3 +300,13 @@ security scanners. A study or benchmark from such a company, about its own kind 
 `vendor`. An academic benchmark that evaluates vendors' models is `independent`. As before, the
 field is filled only when the relation is evident, and left `undetermined` otherwise (`CLAUDE.md`
 §3, whose wording was updated to match).
+
+## 2026-11-12 — first debates
+
+**D39. Near misses can enter a positions document on request.** D29 still sets the brief for
+positions documents: organised by debate, eras only where they explain a debate, candidate debates
+in `## Gaps` one line each. The contributor added an exception: when they ask for the near misses,
+the candidates are entered in the document as well, each under its candidate question, attributed
+and anchored like any position, and marked as having fewer than three sources. Without that request,
+D29 applies unchanged. The first run of this kind covered the three debates approved on 2026-11-12
+and the eight candidates in `notes/90-meta/candidate-debates.md`.
