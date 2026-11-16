@@ -5,6 +5,9 @@
 % Template: the call requires the SBC article format. Download modelosparapublicaodeartigos.zip
 % from https://www.sbc.org.br/ and put sbc-template.sty (and sbc.bst) next to this file. Until
 % then the file falls back to plain article so it still compiles.
+%
+% 2026-11-16: sbc-template.sty and sbc.bst (official SBC kit) added next to this file; section 2
+% (design and evaluation) drafted, figures in figs/ (TikZ sources, rebuild with pdflatex).
 \documentclass[12pt]{article}
 
 \usepackage[utf8]{inputenc}
@@ -12,16 +15,29 @@
 \usepackage[english]{babel}
 \usepackage{xcolor}
 \usepackage{url}
+\usepackage{graphicx}
+\usepackage{tabularx}
+\usepackage{booktabs}
 \IfFileExists{sbc-template.sty}{\usepackage{sbc-template}}{\usepackage[margin=2.5cm]{geometry}}
+
+% Product name used in the design and evaluation sections (the title still has the placeholder).
+\newcommand{\product}{ShadowGuardAI}
 
 % Marks a gap in the draft. Remove every use before submission.
 \newcommand{\fillin}[1]{\textcolor{red}{\textbf{[TO FILL: #1]}}}
 
+\sloppy % as in the SBC template; avoids overfull lines at long citation labels
+
+% Title SUGGESTED on 2026-11-16 to match the four-stage cycle; the authors decide the final one.
+% Previous: [PRODUCT NAME]: Automatic Vulnerability Detection and Compliance Checking for AI-Generated Code
+% Sugestao (Paper Cyber): \title{\product{}: Continuous Detection of Vulnerable Vibe-Coded Software on the Endpoint, with IT-Approved Pentesting}
 \title{[PRODUCT NAME]: Automatic Vulnerability Detection and Compliance Checking for AI-Generated Code}
 
-\author{[AUTHOR 1], [AUTHOR 2]\\
-[AFFILIATION]\\
-\texttt{[emails]}}
+% Affiliation and e-mails moved to \address, as sbc-template.sty requires.
+\author{[AUTHOR 1], [AUTHOR 2]}
+
+\address{[AFFILIATION]
+  \email{[emails]}}
 
 \begin{document}
 
@@ -45,14 +61,60 @@ Within the 18 sources we reviewed, none evaluates compliance checking of AI-gene
 
 \section{Process}
 
-\fillin{how [PRODUCT NAME] was designed and tested; the call asks for the process adopted, for example proof of concept, prototype, measurement of indicators}
+% written_by: Grok Bot (Paper Cyber), 2026-11-16; reviewed_by: (authors). Design and evaluation drafted for the authors' review.
+% Integrity limit (decision of 2026-11-16): the cycle is described as the solution; no deployment, measurement or
+% result of S1/S2 is claimed. Results come only from partner pentests and customer discovery. Every \fillin is a gap the
+% authors must close; no result below is measured yet. No client data appears here.
 
-\begin{itemize}
-  \item \fillin{what the tool does and how: detection techniques used (static analysis, LLM-based review, fuzzing, agentic red teaming), and how compliance with standards is checked}
-  \item \fillin{what it was run on: benchmark, dataset or real case, with size and period}
-  \item \fillin{baselines it was compared against, and the indicators measured (for example recall, precision, time per scan)}
-  \item \fillin{who used it and in what setting, if any practitioner or company took part}
-\end{itemize}
+\textbf{Approach and design.} \product{} was built as an iterative proof of concept on our own cybersecurity harness, a local agent engine, in build, measure and fix cycles closed by automated tests \fillin{test count, sprints}. The engine runs a local model through Ollama~\cite{ollama}, so client code never leaves the client. The model executes nothing: in a deterministic state machine it picks a verb from a typed catalogue (reads, confined writes, destructive actions that always need human confirmation), and the runtime validates it, abstains without grounds and logs every step to a redacted, append-only JSONL file.
+
+\begin{figure}[t]
+\centering
+\includegraphics[width=\textwidth]{figs/architecture.pdf}
+\caption{The four-stage cycle of \product{} with its actors. Dashed regions are trust boundaries, the dashed box is optional, and A1 to A7 are the adversaries of the threat model.}
+\label{fig:arch}
+\end{figure}
+
+\textbf{A continuous four-stage cycle.} Figure~\ref{fig:arch} organises the solution as a cycle between three actors: the user who runs vibe-coded software, the client's IT team (a person or an ITSM system) and the agent. \emph{S1, passive monitor.} A read-only sensor on the endpoint watches processes, listening ports and scripts, and warns the user of basic flaws found by 35 static rules for patterns typical of AI-generated code, such as hard-coded secrets, and by version-based SCA against an offline advisory base with a CycloneDX SBOM~\cite{cyclonedx}. \emph{S2, triage and alert.} A port outside the endpoint's baseline, or a process started from unknown code, raises an alert to IT with its evidence; alerts stay inside the client's network. \emph{S3, approved pentest.} IT approves by signing rules of engagement (ROE) for that alert, naming authoriser, host, software, window and techniques. Without a valid ROE the engine refuses to run. The agent then opens an SSH session to the user's machine and runs an active pentest of the notified software and host: under the techniques listed in the ROE it executes commands, assesses configuration and privilege boundaries, and, when the software exposes a network interface, probes it within the approved scope. Brute force, denial of service, persistence, destructive writes, exfiltration and lateral movement are refused at the ROE gate in every profile; verbs that mutate the host still need human confirmation; rate limits and a kill switch bound the session. An optional external pentest toolkit may be driven for complementary probes, and its output is treated as untrusted. \emph{S4, dual reporting.} Findings are normalised (CWE, CVSS, evidence) and mapped to the OWASP Top 10~\cite{owasp2025top10} and CWE Top 25~\cite{mitre2025cwetop25}; without \texttt{file:line} or a hashed request and response, a finding is reported as a hypothesis, and what was not tested is declared. The user gets a concise report, IT a complete one with a sha256 evidence manifest, and a retest closes the loop.
+
+\textbf{Threat model.} Following STRIDE per component~\cite{shostack2014threat}, we consider a tampered local model (A1); hostile content in the monitored software, such as prompt injection (A2); a forged approval or one signed without reading (A3); poisoned monitor telemetry that hides a process or floods IT (A4); SSH channel abuse, such as a stolen credential or lateral movement (A5); a compromised external toolkit (A6); and report leakage (A7). Whatever comes from the model, the endpoint or tools is untrusted and never decides authorisation: the ROE is checked at every step and the SSH session is bound to the approved host, window and techniques.
+
+\textbf{Evaluation.} Evidence comes from the beta partners, on four questions: whether the monitor's alerts point to real risk and how fast the cycle runs (EQ0); what the pentests find and how much partners confirm (EQ1); whether engagements stay within the ROE (EQ2); and whether users and IT find the reports useful, actionable and trustworthy, and would pay for them (EQ3). Table~\ref{tab:metrics} lists the indicators.
+
+\begin{table}[t]
+\centering
+\caption{Indicators of the monitor (EQ0), the case study (EQ1, EQ2) and the customer discovery (EQ3).}
+\label{tab:metrics}
+\footnotesize
+\begin{tabularx}{\textwidth}{@{}p{3.1cm}Xp{2.3cm}@{}}
+\toprule
+\textbf{Indicator} & \textbf{Definition} & \textbf{Source} \\
+\midrule
+\multicolumn{3}{@{}l}{\emph{(0) Monitor and alerts, S1--S2, on partner endpoints where deployed}}\\
+Alerts & Alerts per endpoint-week, by type (port, process, secret) & Monitor log \\
+Alert precision & Alerts that IT confirms as real risk over alerts reviewed & IT review \\
+Cycle time & Detection to approval; approval to reports & Audit log \\
+\midrule
+\multicolumn{3}{@{}l}{\emph{(a) Case study of partner pentests}}\\
+Findings & Per engagement, by severity, CWE, OWASP; confirmed vs.\ hypotheses & Findings file \\
+Confirmed FP rate & False positives over findings reviewed by the partner & Partner review \\
+Coverage & Files, packages, routes, hosts tested versus declared untested & Report \\
+ROE adherence & Blocked actions, scope violations, actions out of window & Audit log \\
+Remediation & Closed, new and persistent findings at retest; days to fix & Retest \\
+\midrule
+\multicolumn{3}{@{}l}{\emph{(b) Customer discovery}}\\
+Usefulness, trust & Perceived usefulness~\cite{davis1989perceived}; trust and clarity per reader & Questionnaire \\
+Actionability & Findings turned into tickets or fixes, checked against retest & Interview, retest \\
+Value & Previous practice and cost; price range & Both \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+\emph{(a) Case study.} Following~\cite{runeson2009guidelines}, the unit of analysis is the engagement, and all beta engagements are included \fillin{period, number of engagements and partners, sectors in bands}. Two authors extract the indicators, plus ROE signature to delivery and operator hours, with a shared coding sheet; the partner's technical contact marks each finding as confirmed, false positive or unsure. Field recall is unknowable, so coverage is reported instead. Only aggregates are published, with small cells suppressed \fillin{minimum cell size} and approved by partners. The monitor is being rolled out to partner endpoints; where it runs, IT marks each alert as real risk, benign or unsure, and EQ0 is reported for those endpoints only \fillin{endpoints and weeks monitored, if any by the camera-ready}.
+
+\emph{(b) Customer discovery.} Following customer development~\cite{blank2012startup}, every partner that received a report is invited \fillin{number of partners and respondents}: end user, IT lead and buyer. Each answers a short anonymous questionnaire (about ten five-point items) and a 30 to 45 minute semi-structured interview on past behaviour: what was done with each finding, and what was used before at what cost. With consent, interviews are recorded, anonymised and coded by two authors through thematic analysis~\cite{braun2006thematic}; questionnaires are reported as medians, and self-reported fixes are checked against retests.
+
+\textbf{Validity and ethics.} Partner and IT confirmation is a lenient proxy for precision, and few, self-selected partners limit generalisation. Interviews are run by an author who did not run that engagement. Every active test runs under a signed ROE, monitored users consent under the LGPD, and third-party vulnerabilities follow coordinated disclosure. Results use an aligned local model by default.
 
 \section{Solution}
 
@@ -65,7 +127,7 @@ Within the 18 sources we reviewed, none evaluates compliance checking of AI-gene
   \item \fillin{optional: link to one of the Grand Challenges of IS Research in Brazil 2026--2036, only if one genuinely fits}
 \end{itemize}
 
-\bibliographystyle{plain} % switch to sbc once sbc.bst is available
+\bibliographystyle{sbc}
 \bibliography{references}
 
 \end{document}
