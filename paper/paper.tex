@@ -1,71 +1,231 @@
-% v1 draft, written by claude-sonnet-5-5 on 2026-11-12 for the SBSI 2027 Industry and Innovation
-% track (TII-SI). Section 1 is drawn from the vault's debate notes; sections 2 and 3 are
-% placeholders to be written from the product work. Every \fillin is a gap the authors must close.
+% ShadowGuardAI — proposta para a trilha de Indústria e Inovação em SI (TII-SI), SBSI 2027.
 %
-% Template: the call requires the SBC article format. Download modelosparapublicaodeartigos.zip
-% from https://www.sbc.org.br/ and put sbc-template.sty (and sbc.bst) next to this file. Until
-% then the file falls back to plain article so it still compiles.
+% Base: PR #3 (Etore, 16/11/2026) e rascunho do Ian (12/11/2026), com a seção 2 e a figura
+% de arquitetura preservadas. Texto em português do Brasil conforme o guia de escrita
+% acadêmica (D:\Dev\Doutorado\docs\escrita.md).
+%
+% REVISÃO DE 2026-11-23 (parecer de revisor): escopo de S3 corrigido (a variante exercitada
+% em campo foi a externa, não a SSH), origem de geração por IA declarada como não coletada,
+% denominadores de escopo na tabela, baseline estático medido nos bundles (20 alertas, nenhum
+% dos 4 graves), tempo até o relatório reportado e promessas de indicador não medido removidas.
+%
+% TODO AUTORES (único bloqueio para submissão):
+%   - \author{}  → nome dos autores, na ordem de filiação
+%   - \address{} → filiação (instituição) e e-mails
+%
+% REGRA DE SIGILO: nenhum dado de cliente neste arquivo. A seção 3 relata os quatro
+% engagements de forma genérica (ramo e funcionalidades), sem nome, domínio, IP ou evidência.
+
 \documentclass[12pt]{article}
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage[english]{babel}
+\usepackage[brazil]{babel}
 \usepackage{xcolor}
 \usepackage{url}
-\IfFileExists{sbc-template.sty}{\usepackage{sbc-template}}{\usepackage[margin=2.5cm]{geometry}}
+\usepackage{graphicx}
+\usepackage{tabularx}
+\usepackage{booktabs}
+\IfFileExists{sbc-template.sty}{\usepackage{sbc-template}}{\usepackage[a4paper,margin=2.5cm]{geometry}}
 
-% Marks a gap in the draft. Remove every use before submission.
-\newcommand{\fillin}[1]{\textcolor{red}{\textbf{[TO FILL: #1]}}}
+% Nome do produto usado nas seções de desenho e avaliação.
+\newcommand{\product}{ShadowGuardAI}
 
-\title{[PRODUCT NAME]: Automatic Vulnerability Detection and Compliance Checking for AI-Generated Code}
+% Marca uma lacuna do rascunho. Remover antes da submissão.
+\newcommand{\fillin}[1]{\textcolor{red}{\textbf{[A PREENCHER: #1]}}}
 
-\author{[AUTHOR 1], [AUTHOR 2]\\
-[AFFILIATION]\\
-\texttt{[emails]}}
+\sloppy % como no template da SBC; evita linhas estouradas em rótulos de citação longos
+
+\title{\product{}: Detecção e Pentest Autorizado de Software Gerado por IA}
+
+\author{\fillin{autores}}
+
+\address{\fillin{filiação}
+  \email{\fillin{e-mails}}}
 
 \begin{document}
 
 \maketitle
 
 \begin{abstract}
-AI coding assistants and agents now write a growing share of production code, and studies that measure the result report that a large fraction of it is vulnerable, in estimates that range from a substantial minority to most functionally correct output, depending on the benchmark and detector. Off-the-shelf static analysis is reported to miss many of these vulnerabilities, and prompting for security gives gains that vary by setup. This pitch presents [PRODUCT NAME], a \fillin{one-line description of the tool} that \fillin{what it detects and checks, and against which standards}. We built \fillin{prototype or proof of concept} and measured it on \fillin{benchmark or case}. We report \fillin{headline result and benefit for adopters}.
+AI coding assistants now write a growing share of production code, and studies report that a
+large fraction of it is vulnerable. Off-the-shelf static
+analysis is reported to miss much of that code, and compliance of AI-generated code against
+secure coding standards is rarely evaluated. This pitch presents ShadowGuardAI, a service that
+combines local static analysis with authorized assessment of the published application, maps
+every finding to CWE, OWASP Top 10 and CWE Top 25, and refuses any active action without a
+signed rules of engagement. The prototype was validated with 373 automated tests, 35 static
+rules over 38 scenarios and four authorized field assessments that produced 51 findings, one
+critical and three high. Run on three of those targets' published bundles, the same rules
+raised 20 alerts, none of them the four severe authorization flaws. The monitoring and SSH stages were not exercised in the field.
 \end{abstract}
 
-\section{Context}
+\begin{resumo}
+Assistentes de código escrevem parcela crescente do software em produção, e estudos relatam que
+parte relevante dele é vulnerável. A análise estática de autoria livre é relatada como capaz de deixar passar boa
+parte desse código, e a conformidade do código gerado por IA frente a padrões de código seguro
+é avaliada com raridade. Esta proposta apresenta o \product{}, serviço que combina análise
+estática local com avaliação autorizada da aplicação publicada, classifica cada achado em CWE,
+OWASP Top 10 e CWE Top 25 e recusa executar ação ativa sem regras de operação assinadas. O
+protótipo foi validado por 373 testes automatizados, 35 regras estáticas sobre 38 cenários e
+quatro avaliações de campo autorizadas, que produziram 51 achados, sendo um crítico e três
+altos. Aplicadas aos bundles publicados de três desses alvos, as mesmas regras emitiram 20
+alertas, nenhum deles correspondente aos quatro achados graves de autorização, e a maioria em
+código de biblioteca de terceiros. Os estágios de monitoramento e de acesso por SSH não foram
+exercitados em campo.
+\end{resumo}
 
-AI assistants and agents are now routinely used to write code, and a developer who accepts a solution once it passes functional tests may leave vulnerabilities in the repository without noticing. The literature that measures this does not give a single number, because studies count different things with different detectors.
+\section{Contexto}
 
-The first study of this kind, on the August 2021 GitHub Copilot preview, found that approximately 40\% of the programs it generated were vulnerable, across 89 scenarios and 1,689 programs~\cite{pearce2021asleep}. That figure divides by valid completions and does not assess functional correctness. Later work counts only functionally correct output. BaxBench, which runs expert-written exploits against 11 LLMs' backends, reports that on average exploits succeed against around half of the correct programs each model generates, and that the best correct-and-secure rate is about 37\% against a best pass@1 of 62\%~\cite{vero2025baxbench}. On 186 repository-level tasks, Zhao et al.\ report that for SWE-Agent with Claude 4 Sonnet 57.0\% of tasks are solved functionally but only 11.8\% are also secure, so 79.3\% of its functionally correct solutions are insecure~\cite{zhao2026vibe}. These estimates are not directly comparable: they cover different generators, tasks, denominators and ways of deciding that code is vulnerable.
+Assistentes de código e agentes são utilizados de forma rotineira para produzir software, de
+modo que o desenvolvedor que aprova uma solução porque ela passou nos testes funcionais pode
+deixar vulnerabilidades no repositório sem perceber. A literatura que mede esse fenômeno não
+apresenta um número único, pois os estudos contabilizam objetos e detectores diferentes.
 
-Detection is where the practical problem sits. In BaxBench, Snyk Code missed 64 vulnerable programs that the benchmark's exploits showed to be vulnerable, among the correct programs generated by o1 (n = 237)~\cite{vero2025baxbench}. In RealSec-bench, CodeQL alerts reviewed by the authors reached a precision of 44.9\% on 89 alerts, and a two-stage voter-plus-judge adjudication lifted this to 81.7\% at a reported recall of 98.0\%~\cite{wang2026realsec}. The sources use different references for what counts as a missed vulnerability, so these results indicate the range of behaviour of existing detectors rather than a ranking of them.
+O primeiro estudo desse tipo, sobre a prévia do GitHub Copilot em agosto de 2021, identificou
+que aproximadamente 40\% dos programas gerados eram vulneráveis~\cite{pearce2021asleep}.
+Trabalhos posteriores consideram apenas a saída funcionalmente correta: no BaxBench, os
+exploits têm sucesso em torno da metade dos programas corretos de cada modelo
+~\cite{vero2025baxbench}, e em 186 tarefas de nível repositório 79,3\% das soluções funcionais
+do SWE-Agent com Claude 4 Sonnet eram inseguras~\cite{zhao2026vibe}. A detecção é o problema
+prático: o Snyk Code deixou de apontar 64 programas vulneráveis que os exploits do BaxBench
+revelaram~\cite{vero2025baxbench}, e no RealSec-Bench a precisão dos alertas do CodeQL revisados
+foi de 44,9\% em 89 alertas~\cite{wang2026realsec}. Além disso, Blain e Noiseux relatam que seis ferramentas
+estáticas comerciais apontaram 19 dos 250 artefatos de seu corpus e 2 das 90 vulnerabilidades
+provadas por testemunhas de satisfatibilidade do Z3, o que corresponde a 97,8\% de omissão,
+caracterizada como lacuna estrutural e não como problema de configuração~\cite{blain2026broken}.
 
-Asking the model for secure code does not remove the need to check it. Zhao et al.\ report that, in one setting, adding a CWE hint raised the secure share from 11.8\% to 14.5\% (self-selected CWEs) and 15.1\% (oracle CWE) while functional pass fell from 57.0\% to 50.0\% and 55.4\%~\cite{zhao2026vibe}. A poster by Ma et al.\ reports that security-aware prompting reduced vulnerability rates by 37\% to up to 45\% across models, without stating whether the reductions are relative or absolute~\cite{ma2026rethinking}. The interventions and measures differ between these studies.
+Em um levantamento não sistemático de 20 fontes, nenhuma avalia a conformidade de código gerado
+por IA contra padrões de código seguro como CWE e OWASP, que aparecem apenas como taxonomias
+para escolher cenários e exploits. Diante dessa lacuna, este trabalho apresenta o \product{}, um
+serviço de análise estática e avaliação autorizada para equipes que adotam assistentes de
+código e precisam de verificação barata a cada mudança, com rastreabilidade de auditoria e sem
+transferência de código do cliente para fora da sua infraestrutura.
 
-Within the 18 sources we reviewed, none evaluates compliance checking of AI-generated code against secure-coding standards such as CWE and OWASP, which appear only as taxonomies for choosing scenarios and exploits. \fillin{one sentence stating the problem this pitch addresses and the audience, e.g.\ teams adopting AI coding assistants who need verification that is cheap enough to run on every change}
+\section{Processo}
 
-\section{Process}
+\product{} foi construído como prova de conceito iterativa sobre o motor de agente local da
+própria equipe, em ciclos fechados por testes automatizados, e a suíte atual conta com 373
+testes. O motor opera um modelo local por meio do
+Ollama~\cite{ollama}, de modo que o código do cliente não sai da máquina, e o modelo não
+executa nada: em uma máquina de estados determinística, escolhe um verbo de um catálogo
+tipado, com leitura, escrita confinada e ações destrutivas sujeitas a confirmação humana. O
+runtime valida a escolha, abstém-se quando a base é insuficiente e registra cada etapa em
+arquivo JSONL append-only, com redação de segredos.
 
-\fillin{how [PRODUCT NAME] was designed and tested; the call asks for the process adopted, for example proof of concept, prototype, measurement of indicators}
+\begin{figure}[t]
+\centering
+\includegraphics[width=0.73\textwidth]{figs/architecture.pdf}
+\caption{Ciclo de quatro estágios do \product{} e seus atores. As regiões tracejadas são
+limites de confiança, o bloco pontilhado é opcional e A1 a A7 são os adversários do modelo de
+ameaça.}
+\label{fig:arch}
+\end{figure}
 
-\begin{itemize}
-  \item \fillin{what the tool does and how: detection techniques used (static analysis, LLM-based review, fuzzing, agentic red teaming), and how compliance with standards is checked}
-  \item \fillin{what it was run on: benchmark, dataset or real case, with size and period}
-  \item \fillin{baselines it was compared against, and the indicators measured (for example recall, precision, time per scan)}
-  \item \fillin{who used it and in what setting, if any practitioner or company took part}
-\end{itemize}
+\textbf{Um ciclo de quatro estágios.} A Figura~\ref{fig:arch} organiza a solução entre três
+atores: o usuário que executa software gerado por IA, a equipe de TI do cliente, que pode ser
+uma pessoa ou um sistema ITSM, e o agente. \emph{S1, monitoramento passivo.} Um sensor
+somente-leitura no endpoint observa processos, portas e scripts e alerta o usuário sobre
+falhas encontradas por 35 regras estáticas e por análise de dependências por versão, com SBOM
+em CycloneDX~\cite{cyclonedx}. \emph{S2, triagem e alerta.} Uma porta fora da linha de base, ou
+um processo iniciado de código desconhecido, gera alerta para a TI com a evidência, e os
+alertas permanecem na rede do cliente. \emph{S3, avaliação
+autorizada.} A TI aprova assinando regras de operação (ROE, de \emph{rules of engagement}) para
+aquele alerta, com autorizador, host, software, janela e técnicas, e sem ROE válido o motor
+recusa executar. A avaliação assume duas formas conforme a técnica autorizada: a externa, sobre
+a superfície publicada, e a partir de uma sessão SSH no host do usuário, que é a variante
+desenhada para o endpoint. Em ambas, força bruta, negação de serviço, persistência, escrita
+destrutiva, exfiltração e movimento lateral são recusadas, os verbos que alteram o host exigem
+confirmação humana, e limite de requisições e interruptor de emergência delimitam a sessão. A
+variante SSH é ativa por executar comandos no alvo, ainda que o verificador próprio emita
+apenas 19 operações de leitura. \emph{S4, relatório duplo.} Os achados são normalizados, com
+CWE, CVSS e evidência, e mapeados para o OWASP Top 10~\cite{owasp2025top10} e o CWE
+Top 25~\cite{mitre2025cwetop25}; sem referência a arquivo e linha, ou à requisição e resposta
+com hash, o achado é relatado como hipótese, e o que não foi testado é declarado. O usuário
+recebe um relatório conciso, a TI recebe um relatório completo com manifesto de evidência
+sha256, e o reteste fecha o ciclo.
 
-\section{Solution}
+\textbf{Modelo de ameaça.} Seguindo a classificação STRIDE por
+componente~\cite{shostack2014threat}, consideram-se o modelo local adulterado (A1), conteúdo
+hostil no software monitorado, como injeção de prompt (A2), aprovação falsificada ou assinada
+sem leitura (A3), telemetria adulterada (A4), abuso do canal SSH (A5), kit externo comprometido
+(A6) e vazamento de relatório (A7). O portão do ROE foi exercitado por uma bateria determinística
+de ações hostis, com escrita destrutiva, exfiltração, técnica proibida e execução fora da
+janela, todas recusadas nos testes automatizados; a resistência a um modelo adversarial, por
+injeção de prompt, permanece não avaliada.
 
-\fillin{results and benefits for the organisation and the software market; the jury criteria are clarity of description, degree or potential of innovation, and potential interest to companies, startups and entrepreneurs, so state the benefit for adopters directly}
+\textbf{Indicadores medidos.} Cada engagement registra achados por severidade, CWE e categoria
+OWASP, o escopo exercitado e as lacunas não testadas, as ações bloqueadas pelo portão e o tempo
+até o relatório, e o reteste compara achados fechados, novos e persistentes, conforme a unidade
+de análise do engagement~\cite{runeson2009guidelines}; o contato técnico da organização
+classifica cada achado como confirmado, falso positivo ou incerto. Somente agregados são
+publicados, e todo teste ativo exige ROE documentado e consentimento conforme a LGPD.
 
-\begin{itemize}
-  \item \fillin{headline results, with numbers and the setting they hold in}
-  \item \fillin{what is innovative compared with the detectors above}
-  \item \fillin{limits of the evidence and next steps}
-  \item \fillin{optional: link to one of the Grand Challenges of IS Research in Brazil 2026--2036, only if one genuinely fits}
-\end{itemize}
+\section{Solução}
 
-\bibliographystyle{plain} % switch to sbc once sbc.bst is available
+Em laboratório, 373 testes automatizados cobrem o portão do ROE, o redactor de log, o cofre de
+credenciais e o registro de auditoria; 35 regras de análise estática foram calibradas por 38
+cenários autorais, com recall de 100\% e precisão de 100\% e nenhum achado em arquivo seguro, e
+a ablação sobre o código da própria ferramenta apontou uma única regra disparando, a de
+severidade informativo para o uso de \texttt{console.log}.
+
+Em campo, quatro aplicações publicadas foram avaliadas em regime não destrutivo, sem criação de
+conta e sem alteração de dados, com autorização do responsável em cada caso; duas tiveram
+regras de engajamento documentadas e uma é produto próprio da equipe. Nenhum dos quatro casos
+registrou a ferramenta de geração, de modo que os achados não podem ser atribuídos a código
+gerado por IA; o intake do produto passou a coletar esse contexto. A Tabela~\ref{tab:casos}
+resume o escopo exercitado e os achados. No total foram 51 achados, sendo 1 crítico, 3 altos, 10
+médios, 18 baixos e 19 informativos.
+
+\begin{table}[t]
+\centering
+\caption{Engagements de campo (out.–nov. 2026): escopo exercitado e achados por severidade (C, A, M, B, I) — total 1, 3, 10, 18 e 19.}
+\label{tab:casos}
+\scriptsize
+\begin{tabularx}{\textwidth}{@{}p{3.3cm}Xc@{}}
+\toprule
+\textbf{Aplicação} & \textbf{Funcionalidades e escopo exercitado} & \textbf{Achados} \\
+\midrule
+Delivery de restaurante & cardápio, pedido e pagamento; painel de gestão; 5 hosts; Auth, Firestore e Storage & 0/0/3/8/7 \\
+Gestão patrimonial e de contratações públicas & transferência de bens, painel operacional, convites; 43 tabelas, 35 RPCs e 5 edge functions & 0/3/4/2/3 \\
+Portal por assinatura de estratégias & biblioteca, comparativo com backtest, minicurso; páginas protegidas e respostas RSC & 1/0/1/4/4 \\
+Aplicativo de fitness (produto próprio) & treinos, sincronização e histórico; 138 transações e sessão de teste fornecida & 0/0/2/4/5 \\
+\bottomrule
+\end{tabularx}
+\end{table}
+
+Para testar a afirmação sobre análise estática, as 35 regras foram aplicadas aos bundles
+publicados de três dos quatro alvos, os disponíveis localmente. As regras emitiram 20
+alertas, a maioria sobre código de biblioteca empacotado, e nenhum correspondia às quatro falhas
+mais graves; o único alerta de severidade alta no backend, a chave publicável embutida no
+bundle, é pública por desenho e foi reclassificada na revisão manual. A medição é pequena e
+sobre código minificado, mas mostra, no mesmo corpus, o que a regra aponta e o que a falha
+explora.
+
+A leitura conjunta revela um padrão que sustenta a proposta. Em três das quatro aplicações, a
+camada de dados estava endurecida: autorização por linha em todas as tabelas
+testadas, armazenamento negando listagem anônima e controle de acesso de objetos recusando
+leitura sem sessão, além de autenticação, proteção contra CSRF e limite de requisições
+funcionando. As falhas concentraram-se na borda de autorização, e não na persistência: funções de API
+executáveis sem autenticação, uma que bloqueia contas alheias e outra que aprova a
+transferência de patrimônio; dados proprietários serializados antes do redirecionamento e
+devolvidos no corpo da resposta; cadastro aberto somado a painel administrativo sem defesa em
+profundidade; e documento servido pela CDN sem cabeçalhos, ainda que a API os enviasse.
+
+Esse resultado é consistente com a lacuna estrutural relatada pela
+literatura~\cite{blain2026broken}: o achado crítico e os três altos são falhas de autorização e
+de desenho, classificadas como CWE-862, CWE-285 e CWE-200, e nenhum corresponde a um padrão
+coberto pelas 35 regras. A detecção útil veio da superfície publicada, do bundle e da prova de
+conceito controlada, e não do verificador de padrões. Os quatro relatórios saíram por um único
+operador, três no mesmo dia e um no dia seguinte.
+
+O conjunto de evidências tem limites declarados. Os casos são quatro, auto-selecionados, de
+ramos distintos e com escalas de severidade heterogêneas (apenas um aplicou CVSS); um é
+produto próprio e nenhum teve a origem de geração por IA registrada; dois não tiveram sessão
+autenticada, de modo que falhas internas ao app logado permanecem não testadas; e a cobertura
+é reportada em lugar do recall de campo. Os cenários do bench são autorais, e falhas de desenho (A04 do OWASP Top 10) não são detectáveis por análise estática. Próximos passos: monitoramento e SSH em host próprio e teste do portão com modelo adversarial.
+
+\bibliographystyle{sbc}
 \bibliography{references}
 
 \end{document}

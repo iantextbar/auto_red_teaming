@@ -19,3 +19,12 @@ references/pdfs/**/*.pdf
 # Obsidian per-user state
 .obsidian/workspace.json
 .obsidian/workspace-mobile.json
+
+# LaTeX build artifacts do paper/ (o PDF final fica versionado para revisão)
+paper/*.aux
+paper/*.log
+paper/*.blg
+paper/*.bbl
+paper/*.txt
+paper/figs/*.aux
+paper/figs/*.log
