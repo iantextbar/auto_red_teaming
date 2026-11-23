@@ -1,131 +1,232 @@
-% v1 draft, written by claude-sonnet-5-5 on 2026-11-12 for the SBSI 2027 Industry and Innovation
-% track (TII-SI). Section 1 is drawn from the vault's debate notes; sections 2 and 3 are
-% placeholders to be written from the product work. Every \fillin is a gap the authors must close.
+% ShadowGuardAI — proposta para a trilha de Indústria e Inovação em SI (TII-SI), SBSI 2027.
 %
-% Template: the call requires the SBC article format. Download modelosparapublicaodeartigos.zip
-% from https://www.sbc.org.br/ and put sbc-template.sty (and sbc.bst) next to this file. Until
-% then the file falls back to plain article so it still compiles.
+% Base: PR #3 (Etore, 16/11/2026) e rascunho do Ian (12/11/2026), com a seção 2 e a figura
+% de arquitetura preservadas. Texto reescrito em português do Brasil conforme o guia de
+% escrita acadêmica (D:\Dev\Doutorado\docs\escrita.md): sem adjetivações valorativas,
+% sem travessão, conectivo ao início de cada frase, citação em toda afirmação de terceiros
+% e resultados próprios declarados como tais.
 %
-% 2026-11-16: sbc-template.sty and sbc.bst (official SBC kit) added next to this file; section 2
-% (design and evaluation) drafted, figures in figs/ (TikZ sources, rebuild with pdflatex).
+% TODO AUTORES (único bloqueio para submissão):
+%   - \author{}  → nome dos três autores, na ordem de filiação
+%   - \address{} → filiação (instituição) e e-mails
+%
+% REGRA DE SIGILO (mantida): nenhum dado de cliente neste arquivo. A seção 3 relata os
+% quatro engagements de forma genérica (ramo e funcionalidades), sem nome, domínio, IP ou
+% trecho de evidência. Os relatórios originais ficam em private/ no repositório do motor.
+
 \documentclass[12pt]{article}
 
 \usepackage[utf8]{inputenc}
 \usepackage[T1]{fontenc}
-\usepackage[english]{babel}
+\usepackage[brazil]{babel}
 \usepackage{xcolor}
 \usepackage{url}
 \usepackage{graphicx}
 \usepackage{tabularx}
 \usepackage{booktabs}
-\IfFileExists{sbc-template.sty}{\usepackage{sbc-template}}{\usepackage[margin=2.5cm]{geometry}}
+\IfFileExists{sbc-template.sty}{\usepackage{sbc-template}}{\usepackage[a4paper,margin=2.5cm]{geometry}}
 
-% Product name used in the design and evaluation sections (the title still has the placeholder).
+% Nome do produto usado nas seções de desenho e avaliação.
 \newcommand{\product}{ShadowGuardAI}
 
-% Marks a gap in the draft. Remove every use before submission.
-\newcommand{\fillin}[1]{\textcolor{red}{\textbf{[TO FILL: #1]}}}
+% Marca uma lacuna do rascunho. Remover antes da submissão.
+\newcommand{\fillin}[1]{\textcolor{red}{\textbf{[A PREENCHER: #1]}}}
 
-\sloppy % as in the SBC template; avoids overfull lines at long citation labels
+\sloppy % como no template da SBC; evita linhas estouradas em rótulos de citação longos
 
-% Title SUGGESTED on 2026-11-16 to match the four-stage cycle; the authors decide the final one.
-% Previous: [PRODUCT NAME]: Automatic Vulnerability Detection and Compliance Checking for AI-Generated Code
-% Sugestao (Paper Cyber): \title{\product{}: Continuous Detection of Vulnerable Vibe-Coded Software on the Endpoint, with IT-Approved Pentesting}
-\title{[PRODUCT NAME]: Automatic Vulnerability Detection and Compliance Checking for AI-Generated Code}
+\title{\product{}: Detecção Contínua e Pentest Autorizado de Software Gerado por IA}
 
-% Affiliation and e-mails moved to \address, as sbc-template.sty requires.
-\author{[AUTHOR 1], [AUTHOR 2]}
+\author{\fillin{autores}}
 
-\address{[AFFILIATION]
-  \email{[emails]}}
+\address{\fillin{filiação}
+  \email{\fillin{e-mails}}}
 
 \begin{document}
 
 \maketitle
 
 \begin{abstract}
-AI coding assistants and agents now write a growing share of production code, and studies that measure the result report that a large fraction of it is vulnerable, in estimates that range from a substantial minority to most functionally correct output, depending on the benchmark and detector. Off-the-shelf static analysis is reported to miss many of these vulnerabilities, and prompting for security gives gains that vary by setup. This pitch presents [PRODUCT NAME], a \fillin{one-line description of the tool} that \fillin{what it detects and checks, and against which standards}. We built \fillin{prototype or proof of concept} and measured it on \fillin{benchmark or case}. We report \fillin{headline result and benefit for adopters}.
+AI coding assistants and agents now write a growing share of production code, and studies that
+measure the result report that a large fraction of it is vulnerable. Off-the-shelf static
+analysis is reported to miss much of that code, and compliance of AI-generated code against
+secure coding standards is rarely evaluated. This pitch presents ShadowGuardAI, a continuous
+monitoring and authorized assessment service for AI-generated software, which runs a local
+model over a typed verb catalogue, maps every finding to CWE, OWASP Top 10 and CWE Top 25, and
+refuses any active action without a signed rules of engagement. The prototype was validated
+with 373 automated tests, 35 static analysis rules over 38 scenarios and four authorized field
+assessments that produced 51 findings, one critical and three high, none detectable by
+pattern-based static analysis alone.
 \end{abstract}
 
-\section{Context}
+\begin{resumo}
+Assistentes de código e agentes de inteligência artificial escrevem parcela crescente do
+software em produção, e estudos que medem esse resultado relatam que parte relevante dele é
+vulnerável. A análise estática de autoria livre é relatada como capaz de deixar passar boa
+parte desse código, e a conformidade do código gerado por IA frente a padrões de código seguro
+é avaliada com raridade. Esta proposta apresenta o \product{}, serviço de monitoramento
+contínuo e de avaliação autorizada de software gerado por IA, que opera um modelo local sobre
+um catálogo de verbos tipados, classifica cada achado em CWE, OWASP Top 10 e CWE Top 25 e
+recusa executar ação ativa sem regras de operação assinadas. O protótipo foi validado por 373
+testes automatizados, 35 regras de análise estática sobre 38 cenários e quatro avaliações de
+campo autorizadas, que produziram 51 achados, sendo um crítico e três altos, nenhum deles
+detectável apenas por análise estática de padrões.
+\end{resumo}
 
-AI assistants and agents are now routinely used to write code, and a developer who accepts a solution once it passes functional tests may leave vulnerabilities in the repository without noticing. The literature that measures this does not give a single number, because studies count different things with different detectors.
+\section{Contexto}
 
-The first study of this kind, on the August 2021 GitHub Copilot preview, found that approximately 40\% of the programs it generated were vulnerable, across 89 scenarios and 1,689 programs~\cite{pearce2021asleep}. That figure divides by valid completions and does not assess functional correctness. Later work counts only functionally correct output. BaxBench, which runs expert-written exploits against 11 LLMs' backends, reports that on average exploits succeed against around half of the correct programs each model generates, and that the best correct-and-secure rate is about 37\% against a best pass@1 of 62\%~\cite{vero2025baxbench}. On 186 repository-level tasks, Zhao et al.\ report that for SWE-Agent with Claude 4 Sonnet 57.0\% of tasks are solved functionally but only 11.8\% are also secure, so 79.3\% of its functionally correct solutions are insecure~\cite{zhao2026vibe}. These estimates are not directly comparable: they cover different generators, tasks, denominators and ways of deciding that code is vulnerable.
+Assistentes de código e agentes são utilizados de forma rotineira para produzir software, de
+modo que o desenvolvedor que aprova uma solução porque ela passou nos testes funcionais pode
+deixar vulnerabilidades no repositório sem perceber. A literatura que mede esse fenômeno não
+apresenta um número único, pois os estudos contabilizam objetos e detectores diferentes.
 
-Detection is where the practical problem sits. In BaxBench, Snyk Code missed 64 vulnerable programs that the benchmark's exploits showed to be vulnerable, among the correct programs generated by o1 (n = 237)~\cite{vero2025baxbench}. In RealSec-bench, CodeQL alerts reviewed by the authors reached a precision of 44.9\% on 89 alerts, and a two-stage voter-plus-judge adjudication lifted this to 81.7\% at a reported recall of 98.0\%~\cite{wang2026realsec}. The sources use different references for what counts as a missed vulnerability, so these results indicate the range of behaviour of existing detectors rather than a ranking of them.
+O primeiro estudo desse tipo, sobre a prévia do GitHub Copilot em agosto de 2021, identificou
+que aproximadamente 40\% dos programas gerados eram vulneráveis~\cite{pearce2021asleep}.
+Trabalhos posteriores consideram apenas a saída funcionalmente correta: no BaxBench, que executa
+exploits escritos por especialistas contra o código de onze modelos, os exploits têm sucesso em
+torno da metade dos programas corretos de cada modelo~\cite{vero2025baxbench}, e em 186
+tarefas de nível repositório o SWE-Agent com Claude 4 Sonnet resolveu 57,0\% das tarefas de
+forma funcional e 11,8\% de forma também segura, o que corresponde a 79,3\% das soluções
+funcionais inseguras~\cite{zhao2026vibe}. A detecção é onde se situa o problema prático: no
+BaxBench, o Snyk Code deixou de apontar 64 programas vulneráveis que os exploits revelaram
+~\cite{vero2025baxbench}, e no RealSec-Bench os alertas do CodeQL revisados pelos autores
+atingiram precisão de 44,9\% em 89 alertas, elevada a 81,7\% com adjudicação em dois
+estágios~\cite{wang2026realsec}. Além disso, Blain e Noiseux relatam que seis ferramentas de
+análise estática comerciais apontaram 19 dos 250 artefatos de seu corpus e 2 das 90
+vulnerabilidades provadas por testemunhas de satisfatibilidade do Z3, o que corresponde a 97,8\%
+de omissão, caracterizada como lacuna estrutural e não como problema de
+configuração~\cite{blain2026broken}.
 
-Asking the model for secure code does not remove the need to check it. Zhao et al.\ report that, in one setting, adding a CWE hint raised the secure share from 11.8\% to 14.5\% (self-selected CWEs) and 15.1\% (oracle CWE) while functional pass fell from 57.0\% to 50.0\% and 55.4\%~\cite{zhao2026vibe}. A poster by Ma et al.\ reports that security-aware prompting reduced vulnerability rates by 37\% to up to 45\% across models, without stating whether the reductions are relative or absolute~\cite{ma2026rethinking}. The interventions and measures differ between these studies.
+Nas 20 fontes revisadas pela equipe, nenhuma avalia a conformidade de código gerado por IA
+contra padrões de código seguro como CWE e OWASP, que aparecem apenas como taxonomias para
+escolher cenários e exploits. Diante dessa lacuna, este trabalho apresenta o \product{}, um
+serviço de monitoramento contínuo e avaliação autorizada para equipes que adotam assistentes de
+código e precisam de verificação barata a cada mudança, com rastreabilidade de auditoria e sem
+transferência de código do cliente para fora da sua infraestrutura.
 
-Within the 18 sources we reviewed, none evaluates compliance checking of AI-generated code against secure-coding standards such as CWE and OWASP, which appear only as taxonomies for choosing scenarios and exploits. \fillin{one sentence stating the problem this pitch addresses and the audience, e.g.\ teams adopting AI coding assistants who need verification that is cheap enough to run on every change}
+\section{Processo}
 
-\section{Process}
-
-% written_by: Grok Bot (Paper Cyber), 2026-11-16; reviewed_by: (authors). Design and evaluation drafted for the authors' review.
-% Integrity limit (decision of 2026-11-16): the cycle is described as the solution; no deployment, measurement or
-% result of S1/S2 is claimed. Results come only from partner pentests and customer discovery. Every \fillin is a gap the
-% authors must close; no result below is measured yet. No client data appears here.
-
-\textbf{Approach and design.} \product{} was built as an iterative proof of concept on our own cybersecurity harness, a local agent engine, in build, measure and fix cycles closed by automated tests \fillin{test count, sprints}. The engine runs a local model through Ollama~\cite{ollama}, so client code never leaves the client. The model executes nothing: in a deterministic state machine it picks a verb from a typed catalogue (reads, confined writes, destructive actions that always need human confirmation), and the runtime validates it, abstains without grounds and logs every step to a redacted, append-only JSONL file.
+\product{} foi construído como prova de conceito iterativa sobre o motor de agente local da
+própria equipe, em ciclos de construção, medição e correção fechados por testes automatizados;
+a suíte atual conta com 373 testes. O motor opera um modelo local por meio do
+Ollama~\cite{ollama}, de modo que o código do cliente não sai da máquina, e o modelo não
+executa nada: em uma máquina de estados determinística, escolhe um verbo de um catálogo
+tipado, com leitura, escrita confinada e ações destrutivas sujeitas a confirmação humana. O
+runtime valida a escolha, abstém-se quando a base é insuficiente e registra cada etapa em
+arquivo JSONL append-only, com redação de segredos.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=\textwidth]{figs/architecture.pdf}
-\caption{The four-stage cycle of \product{} with its actors. Dashed regions are trust boundaries, the dashed box is optional, and A1 to A7 are the adversaries of the threat model.}
+\includegraphics[width=0.78\textwidth]{figs/architecture.pdf}
+\caption{Ciclo de quatro estágios do \product{} e seus atores. As regiões tracejadas são
+limites de confiança, o bloco pontilhado é opcional e A1 a A7 são os adversários do modelo de
+ameaça.}
 \label{fig:arch}
 \end{figure}
 
-\textbf{A continuous four-stage cycle.} Figure~\ref{fig:arch} organises the solution as a cycle between three actors: the user who runs vibe-coded software, the client's IT team (a person or an ITSM system) and the agent. \emph{S1, passive monitor.} A read-only sensor on the endpoint watches processes, listening ports and scripts, and warns the user of basic flaws found by 35 static rules for patterns typical of AI-generated code, such as hard-coded secrets, and by version-based SCA against an offline advisory base with a CycloneDX SBOM~\cite{cyclonedx}. \emph{S2, triage and alert.} A port outside the endpoint's baseline, or a process started from unknown code, raises an alert to IT with its evidence; alerts stay inside the client's network. \emph{S3, approved pentest.} IT approves by signing rules of engagement (ROE) for that alert, naming authoriser, host, software, window and techniques. Without a valid ROE the engine refuses to run. The agent then opens an SSH session to the user's machine and runs an active pentest of the notified software and host: under the techniques listed in the ROE it executes commands, assesses configuration and privilege boundaries, and, when the software exposes a network interface, probes it within the approved scope. Brute force, denial of service, persistence, destructive writes, exfiltration and lateral movement are refused at the ROE gate in every profile; verbs that mutate the host still need human confirmation; rate limits and a kill switch bound the session. An optional external pentest toolkit may be driven for complementary probes, and its output is treated as untrusted. \emph{S4, dual reporting.} Findings are normalised (CWE, CVSS, evidence) and mapped to the OWASP Top 10~\cite{owasp2025top10} and CWE Top 25~\cite{mitre2025cwetop25}; without \texttt{file:line} or a hashed request and response, a finding is reported as a hypothesis, and what was not tested is declared. The user gets a concise report, IT a complete one with a sha256 evidence manifest, and a retest closes the loop.
+\textbf{Um ciclo contínuo de quatro estágios.} A Figura~\ref{fig:arch} organiza a solução
+como um ciclo entre três atores: o usuário que executa software gerado por IA, a equipe de TI
+do cliente, que pode ser uma pessoa ou um sistema ITSM, e o agente. \emph{S1, monitoramento
+passivo.} Um sensor somente-leitura no endpoint observa processos, portas em escuta e
+scripts, e alerta o usuário sobre falhas básicas encontradas por 35 regras estáticas sobre
+padrões típicos de código gerado por IA, como segredos embutidos, e por análise de dependências
+por versão contra uma base de avisos mantida offline, com SBOM em
+CycloneDX~\cite{cyclonedx}. \emph{S2, triagem e alerta.} Uma porta fora da linha de base do
+endpoint, ou um processo iniciado a partir de código desconhecido, gera alerta para a TI com a
+evidência correspondente, e os alertas permanecem na rede do cliente. \emph{S3, pentest
+autorizado.} A TI aprova assinando regras de operação (ROE, de \emph{rules of engagement})
+para aquele alerta, com autorizador, host, software, janela e técnicas, e sem ROE válido o
+motor recusa executar. O agente abre então uma sessão SSH para a máquina do usuário e conduz um
+pentest ativo do software e do host notificados: dentro das técnicas listadas no ROE, executa
+comandos, avalia configuração e fronteiras de privilégio e, quando o software expõe interface
+de rede, sonda a interface dentro do escopo aprovado. Força bruta, negação de serviço,
+persistência, escrita destrutiva, exfiltração e movimento lateral são recusadas em qualquer
+perfil, os verbos que alteram o host exigem confirmação humana, e limite de requisições e
+interruptor de emergência delimitam a sessão. O pentest é ativo por executar
+comandos no alvo, ainda que o verificador próprio emita apenas 19 operações de leitura; um kit
+externo de pentest, opcional, pode ser acionado para sondas complementares, com saída tratada
+como não confiável. \emph{S4, relatório duplo.} Os achados são normalizados, com CWE,
+CVSS e evidência, e mapeados para o OWASP Top 10~\cite{owasp2025top10} e o CWE
+Top 25~\cite{mitre2025cwetop25}; sem referência a arquivo e linha, ou a requisição e resposta
+com hash, o achado é relatado como hipótese, e o que não foi testado é declarado. O usuário
+recebe um relatório conciso, a TI recebe um relatório completo com manifesto de evidência
+sha256, e o reteste fecha o ciclo.
 
-\textbf{Threat model.} Following STRIDE per component~\cite{shostack2014threat}, we consider a tampered local model (A1); hostile content in the monitored software, such as prompt injection (A2); a forged approval or one signed without reading (A3); poisoned monitor telemetry that hides a process or floods IT (A4); SSH channel abuse, such as a stolen credential or lateral movement (A5); a compromised external toolkit (A6); and report leakage (A7). Whatever comes from the model, the endpoint or tools is untrusted and never decides authorisation: the ROE is checked at every step and the SSH session is bound to the approved host, window and techniques.
+\textbf{Modelo de ameaça.} Seguindo a classificação STRIDE por
+componente~\cite{shostack2014threat}, consideram-se o modelo local adulterado (A1), conteúdo
+hostil no software monitorado, como injeção de prompt (A2), aprovação falsificada ou assinada
+sem leitura (A3), telemetria adulterada (A4), abuso do canal SSH (A5), kit externo comprometido
+(A6) e vazamento de relatório (A7). O que vem do modelo, do endpoint ou das ferramentas é
+tratado como não confiável e jamais decide a autorização: o ROE é verificado a cada etapa, e a
+sessão SSH é vinculada ao host, à janela e às técnicas aprovadas.
 
-\textbf{Evaluation.} Evidence comes from the beta partners, on four questions: whether the monitor's alerts point to real risk and how fast the cycle runs (EQ0); what the pentests find and how much partners confirm (EQ1); whether engagements stay within the ROE (EQ2); and whether users and IT find the reports useful, actionable and trustworthy, and would pay for them (EQ3). Table~\ref{tab:metrics} lists the indicators.
+\textbf{Indicadores medidos.} Cada engagement registra achados por severidade, CWE e categoria
+OWASP, a cobertura declarada e as lacunas não testadas, as ações bloqueadas pelo portão do ROE e
+as horas de operador, e o reteste compara achados fechados, novos e persistentes, conforme a
+unidade de análise do engagement~\cite{runeson2009guidelines}; o contato técnico da organização
+classifica cada achado como confirmado, falso positivo ou incerto. Somente agregados são
+publicados, e todo teste ativo exige ROE assinado e consentimento conforme a LGPD.
+
+\section{Solução}
+
+O protótipo foi validado em duas frentes: laboratório e campo. Em laboratório, 373 testes
+automatizados cobrem o portão do ROE, o redactor de log, o cofre de credenciais e o registro de auditoria; 35 regras de análise estática foram calibradas
+por 38 cenários autorais, com recall de 100\% e precisão de 100\% e nenhum achado em arquivo
+seguro, e a ablação sobre o código da própria ferramenta apontou uma única regra disparando, a
+de severidade informativo para o uso de \texttt{console.log}. O portão do ROE falha de forma fechada e
+bloqueia, por exemplo, perfil ativo sem ROE válido, execução fora da janela e requisição
+mutante em perfil passivo.
+
+Em campo, quatro aplicações publicadas foram avaliadas com autorização do responsável, em
+regime não destrutivo, sem criação de conta de teste e sem alteração de dados, dois deles
+sob ROE assinado. A Tabela~\ref{tab:casos} resume o ramo, as funcionalidades exercitadas e os
+achados por severidade. No total foram 51 achados, sendo um crítico, três altos, dez médios,
+18 baixos e 19 informativos.
 
 \begin{table}[t]
 \centering
-\caption{Indicators of the monitor (EQ0), the case study (EQ1, EQ2) and the customer discovery (EQ3).}
-\label{tab:metrics}
-\footnotesize
-\begin{tabularx}{\textwidth}{@{}p{3.1cm}Xp{2.3cm}@{}}
+\caption{Engagements de campo: ramo, funcionalidades avaliadas e achados por severidade (C, A, M, B, I), com total de 1, 3, 10, 18 e 19.}
+\label{tab:casos}
+\scriptsize
+\begin{tabularx}{\textwidth}{@{}p{3.5cm}Xc@{}}
 \toprule
-\textbf{Indicator} & \textbf{Definition} & \textbf{Source} \\
+\textbf{Aplicação} & \textbf{Funcionalidades exercitadas} & \textbf{Achados} \\
 \midrule
-\multicolumn{3}{@{}l}{\emph{(0) Monitor and alerts, S1--S2, on partner endpoints where deployed}}\\
-Alerts & Alerts per endpoint-week, by type (port, process, secret) & Monitor log \\
-Alert precision & Alerts that IT confirms as real risk over alerts reviewed & IT review \\
-Cycle time & Detection to approval; approval to reports & Audit log \\
-\midrule
-\multicolumn{3}{@{}l}{\emph{(a) Case study of partner pentests}}\\
-Findings & Per engagement, by severity, CWE, OWASP; confirmed vs.\ hypotheses & Findings file \\
-Confirmed FP rate & False positives over findings reviewed by the partner & Partner review \\
-Coverage & Files, packages, routes, hosts tested versus declared untested & Report \\
-ROE adherence & Blocked actions, scope violations, actions out of window & Audit log \\
-Remediation & Closed, new and persistent findings at retest; days to fix & Retest \\
-\midrule
-\multicolumn{3}{@{}l}{\emph{(b) Customer discovery}}\\
-Usefulness, trust & Perceived usefulness~\cite{davis1989perceived}; trust and clarity per reader & Questionnaire \\
-Actionability & Findings turned into tickets or fixes, checked against retest & Interview, retest \\
-Value & Previous practice and cost; price range & Both \\
+Delivery de restaurante & cardápio, carrinho, pedido e pagamento; painel de gestão; autenticação; borda de CDN & 0/0/3/8/7 \\
+Gestão patrimonial e de contratações públicas & aprovação de transferência de bens, painel operacional, convites de processo, cadastro & 0/3/4/2/3 \\
+Portal por assinatura de estratégias de investimento & biblioteca de estratégias, comparativo com backtest, minicurso, planos pagos & 1/0/1/4/4 \\
+Aplicativo de fitness com gamificação & treinos, sincronização e histórico, acesso por código de uso único, administração & 0/0/2/4/5 \\
 \bottomrule
 \end{tabularx}
 \end{table}
 
-\emph{(a) Case study.} Following~\cite{runeson2009guidelines}, the unit of analysis is the engagement, and all beta engagements are included \fillin{period, number of engagements and partners, sectors in bands}. Two authors extract the indicators, plus ROE signature to delivery and operator hours, with a shared coding sheet; the partner's technical contact marks each finding as confirmed, false positive or unsure. Field recall is unknowable, so coverage is reported instead. Only aggregates are published, with small cells suppressed \fillin{minimum cell size} and approved by partners. The monitor is being rolled out to partner endpoints; where it runs, IT marks each alert as real risk, benign or unsure, and EQ0 is reported for those endpoints only \fillin{endpoints and weeks monitored, if any by the camera-ready}.
+A leitura conjunta dos casos revela um padrão que sustenta a proposta. Em três das quatro
+aplicações, a camada de dados estava endurecida: autorização por linha habilitada em todas as
+tabelas testadas, armazenamento negando listagem anônima e controle de acesso de objetos
+recusando leitura sem sessão, além de autenticação, proteção contra CSRF e limite de
+requisições funcionando. As falhas concentraram-se na borda de autorização, e não na
+persistência: funções de API executáveis sem autenticação, incluindo uma que permite bloquear
+contas alheias e outra que aprova a transferência de patrimônio; dados proprietários
+serializados antes do redirecionamento e devolvidos no corpo da resposta; cadastro aberto
+somado a painel administrativo sem defesa em profundidade; e documento e ativos servidos pela
+CDN sem cabeçalhos de segurança, ainda que a API os enviasse.
 
-\emph{(b) Customer discovery.} Following customer development~\cite{blank2012startup}, every partner that received a report is invited \fillin{number of partners and respondents}: end user, IT lead and buyer. Each answers a short anonymous questionnaire (about ten five-point items) and a 30 to 45 minute semi-structured interview on past behaviour: what was done with each finding, and what was used before at what cost. With consent, interviews are recorded, anonymised and coded by two authors through thematic analysis~\cite{braun2006thematic}; questionnaires are reported as medians, and self-reported fixes are checked against retests.
+Esse resultado tem consequência direta para a tese do trabalho. O achado crítico e os três
+altos são falhas de autorização e de desenho, classificadas como CWE-862, CWE-285 e CWE-200, e
+nenhum corresponde a um padrão que uma regra de análise estática detecte, o que confirma de
+forma empírica a lacuna estrutural relatada pela literatura~\cite{blain2026broken}. A detecção
+útil veio da superfície publicada, do bundle e da prova de conceito controlada, e não do
+verificador de padrões.
 
-\textbf{Validity and ethics.} Partner and IT confirmation is a lenient proxy for precision, and few, self-selected partners limit generalisation. Interviews are run by an author who did not run that engagement. Every active test runs under a signed ROE, monitored users consent under the LGPD, and third-party vulnerabilities follow coordinated disclosure. Results use an aligned local model by default.
+O conjunto de evidências tem limites declarados. Os casos são quatro, de organizações
+auto-selecionadas e de ramos distintos, o que limita a generalização; dois deles não tiveram
+sessão autenticada, de modo que falhas internas ao app logado permanecem não testadas; e a
+cobertura é reportada em lugar do recall de campo, que é desconhecível. Os cenários do bench são
+autorais e medem cobertura e regressão. Falhas de desenho, como as da categoria A04 do OWASP
+Top 10, não são detectáveis por análise estática.
 
-\section{Solution}
-
-\fillin{results and benefits for the organisation and the software market; the jury criteria are clarity of description, degree or potential of innovation, and potential interest to companies, startups and entrepreneurs, so state the benefit for adopters directly}
-
-\begin{itemize}
-  \item \fillin{headline results, with numbers and the setting they hold in}
-  \item \fillin{what is innovative compared with the detectors above}
-  \item \fillin{limits of the evidence and next steps}
-  \item \fillin{optional: link to one of the Grand Challenges of IS Research in Brazil 2026--2036, only if one genuinely fits}
-\end{itemize}
+Como passos seguintes, os autores pretendem ampliar a série com os demais parceiros beta, manter
+os retestes e importar datasets públicos de referência, como CWEval~\cite{peng2025cweval} e
+BaxBench~\cite{vero2025baxbench}, com licença verificada.
 
 \bibliographystyle{sbc}
 \bibliography{references}
