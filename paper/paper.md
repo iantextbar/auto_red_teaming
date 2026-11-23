@@ -134,9 +134,10 @@ informativo para o uso de `console.log`.
 
 Em campo, quatro aplicações publicadas foram avaliadas em regime não destrutivo, sem criação de
 conta e sem alteração de dados, com autorização do responsável em cada caso; duas tiveram regras
-de engajamento documentadas e uma é produto próprio da equipe. Nenhum dos quatro casos registrou
-a ferramenta de geração, de modo que os achados não podem ser atribuídos a código gerado por IA; o
-intake do produto passou a coletar esse contexto. No total foram 51 achados, sendo 1 crítico, 3
+de engajamento documentadas e uma é produto próprio da equipe. Segundo os responsáveis, o desenvolvimento contou com os
+assistentes Claude e Codex, mas a ferramenta não foi registrada por caso, de modo que a
+atribuição dos achados a código gerado por IA permanece indiciária; o intake do produto passou a
+registrar esse contexto. No total foram 51 achados, sendo 1 crítico, 3
 altos, 10 médios, 18 baixos e 19 informativos.
 
 **Tabela 1.** *Engagements de campo (out.–nov. 2026): escopo exercitado e achados por severidade
@@ -179,8 +180,7 @@ no dia seguinte.
 ### Limitações
 
 O conjunto de evidências tem limites declarados. Os casos são quatro, auto-selecionados, de ramos
-distintos e com escalas de severidade heterogêneas (apenas um aplicou CVSS); um é produto próprio e
-nenhum teve a origem de geração por IA registrada; dois não tiveram sessão autenticada, de modo
+distintos e com escalas de severidade heterogêneas (apenas um aplicou CVSS); um é produto próprio e a origem de geração foi apenas declarada, sem registro por caso; dois não tiveram sessão autenticada, de modo
 que falhas internas ao app logado permanecem não testadas; e a cobertura é reportada em lugar do
 recall de campo. Os cenários do bench são autorais, e falhas de desenho (A04 do OWASP Top 10) não
 são detectáveis por análise estática. Próximos passos: monitoramento e SSH em host próprio e teste
