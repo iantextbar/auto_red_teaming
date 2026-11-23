@@ -48,7 +48,7 @@ um número único, pois os estudos contabilizam objetos e detectores diferentes.
 
 O primeiro estudo desse tipo, sobre a prévia do GitHub Copilot em agosto de 2021, identificou que
 aproximadamente 40% dos programas gerados eram vulneráveis (Pearce et al., 2021). Trabalhos
-posteriores consideram apenas a saída funcionalmente correta: no BaxBench, os exploits têm
+posteriores consideram só a saída funcionalmente correta: no BaxBench, os exploits têm
 sucesso em torno da metade dos programas corretos de cada modelo (Vero et al., 2025), e em 186
 tarefas de nível repositório 79,3% das soluções funcionais do SWE-Agent com Claude 4 Sonnet eram
 inseguras (Zhao et al., 2026). A detecção é o problema prático: o Snyk Code deixou de apontar 64
@@ -97,7 +97,7 @@ variante desenhada para o endpoint. Em ambas, força bruta, negação de serviç
 escrita destrutiva, exfiltração e movimento lateral são recusadas, os verbos que alteram o host
 exigem confirmação humana, e limite de requisições e interruptor de emergência delimitam a
 sessão. A variante SSH é ativa por executar comandos no alvo, ainda que o verificador próprio
-emita apenas 19 operações de leitura.
+emita apenas 18 operações de leitura.
 
 **S4, relatório duplo.** Os achados são normalizados, com CWE, CVSS e evidência, e mapeados para o
 OWASP Top 10 (OWASP Foundation, 2026) e o CWE Top 25 (MITRE, 2026); sem referência a arquivo e
@@ -137,8 +137,7 @@ conta e sem alteração de dados, com autorização do responsável em cada caso
 de engajamento documentadas e uma é produto próprio da equipe. Segundo os responsáveis, o desenvolvimento contou com os
 assistentes Claude e Codex, mas a ferramenta não foi registrada por caso, de modo que a
 atribuição dos achados a código gerado por IA permanece indiciária; o intake do produto passou a
-registrar esse contexto. No total foram 51 achados, sendo 1 crítico, 3
-altos, 10 médios, 18 baixos e 19 informativos.
+registrar esse contexto. A Tabela 1 resume o escopo exercitado e os 51 achados.
 
 **Tabela 1.** *Engagements de campo (out.–nov. 2026): escopo exercitado e achados por severidade
 (C, A, M, B, I) — total 1, 3, 10, 18 e 19.*
@@ -183,8 +182,8 @@ O conjunto de evidências tem limites declarados. Os casos são quatro, auto-sel
 distintos e com escalas de severidade heterogêneas (apenas um aplicou CVSS); um é produto próprio e a origem de geração foi apenas declarada, sem registro por caso; dois não tiveram sessão autenticada, de modo
 que falhas internas ao app logado permanecem não testadas; e a cobertura é reportada em lugar do
 recall de campo. Os cenários do bench são autorais, e falhas de desenho (A04 do OWASP Top 10) não
-são detectáveis por análise estática. Próximos passos: monitoramento e SSH em host próprio e teste
-do portão com modelo adversarial.
+são detectáveis por análise estática. Próximos passos: monitoramento e SSH em host próprio, teste do portão com modelo adversarial e
+medição das regras com CWEval (Peng et al., 2025).
 
 ---
 

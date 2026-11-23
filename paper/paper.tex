@@ -84,7 +84,7 @@ apresenta um número único, pois os estudos contabilizam objetos e detectores d
 
 O primeiro estudo desse tipo, sobre a prévia do GitHub Copilot em agosto de 2021, identificou
 que aproximadamente 40\% dos programas gerados eram vulneráveis~\cite{pearce2021asleep}.
-Trabalhos posteriores consideram apenas a saída funcionalmente correta: no BaxBench, os
+Trabalhos posteriores consideram só a saída funcionalmente correta: no BaxBench, os
 exploits têm sucesso em torno da metade dos programas corretos de cada modelo
 ~\cite{vero2025baxbench}, e em 186 tarefas de nível repositório 79,3\% das soluções funcionais
 do SWE-Agent com Claude 4 Sonnet eram inseguras~\cite{zhao2026vibe}. A detecção é o problema
@@ -110,12 +110,12 @@ testes. O motor opera um modelo local por meio do
 Ollama~\cite{ollama}, de modo que o código do cliente não sai da máquina, e o modelo não
 executa nada: em uma máquina de estados determinística, escolhe um verbo de um catálogo
 tipado, com leitura, escrita confinada e ações destrutivas sujeitas a confirmação humana. O
-runtime valida a escolha, abstém-se quando a base é insuficiente e registra cada etapa em
-arquivo JSONL append-only, com redação de segredos.
+runtime valida a escolha, abstém-se sem base suficiente e registra cada etapa em
+JSONL append-only, com redação de segredos.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.73\textwidth]{figs/architecture.pdf}
+\includegraphics[width=0.66\textwidth]{figs/architecture.pdf}
 \caption{Ciclo de quatro estágios do \product{} e seus atores. As regiões tracejadas são
 limites de confiança, o bloco pontilhado é opcional e A1 a A7 são os adversários do modelo de
 ameaça.}
@@ -138,7 +138,7 @@ desenhada para o endpoint. Em ambas, força bruta, negação de serviço, persis
 destrutiva, exfiltração e movimento lateral são recusadas, os verbos que alteram o host exigem
 confirmação humana, e limite de requisições e interruptor de emergência delimitam a sessão. A
 variante SSH é ativa por executar comandos no alvo, ainda que o verificador próprio emita
-apenas 19 operações de leitura. \emph{S4, relatório duplo.} Os achados são normalizados, com
+apenas 18 operações de leitura. \emph{S4, relatório duplo.} Os achados são normalizados, com
 CWE, CVSS e evidência, e mapeados para o OWASP Top 10~\cite{owasp2025top10} e o CWE
 Top 25~\cite{mitre2025cwetop25}; sem referência a arquivo e linha, ou à requisição e resposta
 com hash, o achado é relatado como hipótese, e o que não foi testado é declarado. O usuário
@@ -166,8 +166,8 @@ publicados, e todo teste ativo exige ROE documentado e consentimento conforme a 
 Em laboratório, 373 testes automatizados cobrem o portão do ROE, o redactor de log, o cofre de
 credenciais e o registro de auditoria; 35 regras de análise estática foram calibradas por 38
 cenários autorais, com recall de 100\% e precisão de 100\% e nenhum achado em arquivo seguro, e
-a ablação sobre o código da própria ferramenta apontou uma única regra disparando, a de
-severidade informativo para o uso de \texttt{console.log}.
+a ablação sobre o próprio código apontou uma única regra disparando, a de
+\texttt{console.log} em severidade informativo.
 
 Em campo, quatro aplicações publicadas foram avaliadas em regime não destrutivo, sem criação de
 conta e sem alteração de dados, com autorização do responsável em cada caso; duas tiveram
@@ -175,8 +175,7 @@ regras de engajamento documentadas e uma é produto próprio da equipe. Segundo 
 o desenvolvimento contou com os assistentes Claude e Codex, mas a ferramenta não foi registrada
 por caso, de modo que a atribuição dos achados a código gerado por IA permanece indiciária; o
 intake do produto passou a registrar esse contexto. A Tabela~\ref{tab:casos}
-resume o escopo exercitado e os achados. No total foram 51 achados, sendo 1 crítico, 3 altos, 10
-médios, 18 baixos e 19 informativos.
+resume o escopo exercitado e os 51 achados.
 
 \begin{table}[t]
 \centering
@@ -203,7 +202,7 @@ bundle, é pública por desenho e foi reclassificada na revisão manual. A medi�
 sobre código minificado, mas mostra, no mesmo corpus, o que a regra aponta e o que a falha
 explora.
 
-A leitura conjunta revela um padrão que sustenta a proposta. Em três das quatro aplicações, a
+A leitura conjunta sustenta a proposta. Em três das quatro aplicações, a
 camada de dados estava endurecida: autorização por linha em todas as tabelas
 testadas, armazenamento negando listagem anônima e controle de acesso de objetos recusando
 leitura sem sessão, além de autenticação, proteção contra CSRF e limite de requisições
@@ -220,11 +219,12 @@ coberto pelas 35 regras. A detecção útil veio da superfície publicada, do bu
 conceito controlada, e não do verificador de padrões. Os quatro relatórios saíram por um único
 operador, três no mesmo dia e um no dia seguinte.
 
-O conjunto de evidências tem limites declarados. Os casos são quatro, auto-selecionados, de
+Os limites são declarados. Os casos são quatro, auto-selecionados, de
 ramos distintos e com escalas de severidade heterogêneas (apenas um aplicou CVSS); um é
 produto próprio e nenhum teve a origem de geração por IA registrada; dois não tiveram sessão
 autenticada, de modo que falhas internas ao app logado permanecem não testadas; e a cobertura
-é reportada em lugar do recall de campo. Os cenários do bench são autorais, e falhas de desenho (A04 do OWASP Top 10) não são detectáveis por análise estática. Próximos passos: monitoramento e SSH em host próprio e teste do portão com modelo adversarial.
+é reportada em lugar do recall de campo. Os cenários do bench são autorais, e falhas de desenho (A04 do OWASP Top 10) não são detectáveis por análise estática. Próximos passos: monitoramento e SSH em host próprio, teste do portão com modelo adversarial e
+medição das regras com CWEval~\cite{peng2025cweval}.
 
 \bibliographystyle{sbc}
 \bibliography{references}
