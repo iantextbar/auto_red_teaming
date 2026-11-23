@@ -176,9 +176,10 @@ de severidade informativo para o uso de \texttt{console.log}. O portão do ROE f
 bloqueia, por exemplo, perfil ativo sem ROE válido, execução fora da janela e requisição
 mutante em perfil passivo.
 
-Em campo, quatro aplicações publicadas foram avaliadas com autorização do responsável, em
-regime não destrutivo, sem criação de conta de teste e sem alteração de dados, dois deles
-sob ROE assinado. A Tabela~\ref{tab:casos} resume o ramo, as funcionalidades exercitadas e os
+Em campo, quatro aplicações publicadas foram avaliadas em regime não destrutivo, sem criação de
+conta e sem alteração de dados, com autorização do responsável em cada caso; dois deles tiveram
+regras de engajamento documentadas e um deles é produto próprio da equipe. A
+Tabela~\ref{tab:casos} resume o ramo, as funcionalidades exercitadas e os
 achados por severidade. No total foram 51 achados, sendo um crítico, três altos, dez médios,
 18 baixos e 19 informativos.
 
@@ -212,7 +213,7 @@ CDN sem cabeçalhos de segurança, ainda que a API os enviasse.
 
 Esse resultado tem consequência direta para a tese do trabalho. O achado crítico e os três
 altos são falhas de autorização e de desenho, classificadas como CWE-862, CWE-285 e CWE-200, e
-nenhum corresponde a um padrão que uma regra de análise estática detecte, o que confirma de
+nenhum corresponde a um padrão coberto pelas 35 regras, o que confirma de
 forma empírica a lacuna estrutural relatada pela literatura~\cite{blain2026broken}. A detecção
 útil veio da superfície publicada, do bundle e da prova de conceito controlada, e não do
 verificador de padrões.
