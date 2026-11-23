@@ -133,8 +133,9 @@ ablação sobre o código da própria ferramenta apontou uma única regra dispar
 informativo para o uso de `console.log`.
 
 Em campo, quatro aplicações publicadas foram avaliadas em regime não destrutivo, sem criação de
-conta e sem alteração de dados, com autorização do responsável em cada caso; duas tiveram regras
-de engajamento documentadas e uma é produto próprio da equipe. Segundo os responsáveis, o desenvolvimento contou com os
+conta e sem alteração de dados, com autorização do responsável em cada caso e anuência para a
+publicação dos resultados agregados, que permanecem anonimizados; duas tiveram regras de
+engajamento documentadas e uma é produto próprio da equipe. Segundo os responsáveis, o desenvolvimento contou com os
 assistentes Claude e Codex, mas a ferramenta não foi registrada por caso, de modo que a
 atribuição dos achados a código gerado por IA permanece indiciária; o intake do produto passou a
 registrar esse contexto. A Tabela 1 resume o escopo exercitado e os 51 achados.

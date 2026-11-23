@@ -46,7 +46,7 @@ pdflatex -interaction=nonstopmode figs/architecture.tex
 ## Pendências
 
 - [ ] Nomes, filiação e e-mails dos autores
-- [ ] Aval dos quatro avaliados para publicar os agregados (um é órgão público)
+- [x] Aval dos quatro avaliados para publicar os agregados anonimizados (confirmado)
 - [ ] Revisão de texto pelos coautores
 - [ ] Congelar os números na data da submissão (373 testes, 35 regras, 38 cenários, 51 achados,
       18 operações de leitura)
