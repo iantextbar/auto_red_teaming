@@ -1,9 +1,9 @@
 # ShadowGuardAI: Detecção e Pentest Autorizado de Software Gerado por IA
 
-**Ian Teixeira Barreiro**¹, **Renato de Oliveira Rosa**², **Étore Braga e Santos**³
+**Renato de Oliveira Rosa**¹, **Ian Teixeira Barreiro**², **Étore Braga e Santos**³
 
-¹ Universidade de São Paulo, ian.barreiro@usp.br · ² Fucape Business School,
-gestor.renatorosa@gmail.com · ³ Universidade Estadual de Campinas, etorebes@gmail.com
+¹ Fucape Business School, gestor.renatorosa@gmail.com · ² Universidade de São Paulo,
+ian.barreiro@usp.br · ³ Universidade Estadual de Campinas, etorebes@gmail.com
 
 > Espelho em Markdown do `paper.tex` (trilha de Indústria e Inovação em SI, TII-SI, SBSI 2027).
 > O PDF é gerado com `pdflatex`, `bibtex`, `pdflatex` (2×) **nesta pasta**, porque o
