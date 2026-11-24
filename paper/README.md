@@ -35,9 +35,9 @@ pdflatex -interaction=nonstopmode figs/architecture.tex
 
 ## Checagens antes de submeter
 
-1. **Corpo em 4 páginas e referências na página 5** — o texto tem ~2 linhas de folga; se
-   acrescentar algo, recompile e confirme.
-2. **Nenhum `[A PREENCHER]`** no PDF: hoje restam autores, filiação e e-mails.
+1. **Corpo em 4 páginas** — o texto termina na página 4 e as referências ocupam o fim da 4 e a 5;
+   há ~3 linhas de folga no corpo. Se acrescentar algo, recompile e confirme.
+2. **Nenhum `[A PREENCHER]` no PDF.**
 3. **Zero citações pendentes**: `Select-String paper.log -Pattern "undefined"` não deve achar nada.
 4. **Nenhum dado de cliente**: a seção 3 descreve os quatro casos por ramo e funcionalidades,
    sem nome, domínio, IP ou evidência. Os relatórios originais ficam em `private/`.
@@ -45,7 +45,7 @@ pdflatex -interaction=nonstopmode figs/architecture.tex
 
 ## Pendências
 
-- [ ] Nomes, filiação e e-mails dos autores
+- [x] Nomes, filiação e e-mails dos autores (Ian/USP, Renato/Fucape, Étore/Unicamp)
 - [x] Aval dos quatro avaliados para publicar os agregados anonimizados (confirmado)
 - [ ] Revisão de texto pelos coautores
 - [ ] Congelar os números na data da submissão (373 testes, 35 regras, 38 cenários, 51 achados,

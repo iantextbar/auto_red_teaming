@@ -1,11 +1,13 @@
 # ShadowGuardAI: Detecção e Pentest Autorizado de Software Gerado por IA
 
-> Espelho em Markdown do `paper.tex` (trilha de Indústria e Inovação em SI, TII-SI, SBSI 2027),
-> já com as correções do parecer de revisão de 23/11/2026. O PDF é gerado com
-> `pdflatex paper; bibtex paper; pdflatex paper` (2×) **nesta pasta** (o `sbc-template.sty`
-> precisa estar no diretório de trabalho).
->
-> Pendência única: autores, filiação e e-mails (`[A PREENCHER]`).
+**Ian Teixeira Barreiro**¹, **Renato de Oliveira Rosa**², **Étore Braga e Santos**³
+
+¹ Universidade de São Paulo, ian.barreiro@usp.br · ² Fucape Business School,
+gestor.renatorosa@gmail.com · ³ Universidade Estadual de Campinas, etorebes@gmail.com
+
+> Espelho em Markdown do `paper.tex` (trilha de Indústria e Inovação em SI, TII-SI, SBSI 2027).
+> O PDF é gerado com `pdflatex`, `bibtex`, `pdflatex` (2×) **nesta pasta**, porque o
+> `sbc-template.sty` precisa estar no diretório de trabalho.
 
 ---
 
@@ -14,13 +16,13 @@
 AI coding assistants now write a growing share of production code, and studies report that a
 large fraction of it is vulnerable. Off-the-shelf static analysis is reported to miss much of
 that code, and compliance of AI-generated code against secure coding standards is rarely
-evaluated. This pitch presents ShadowGuardAI, a service that combines local static analysis with
-authorized assessment of the published application, maps every finding to CWE, OWASP Top 10 and
-CWE Top 25, and refuses any active action without a signed rules of engagement. The prototype was
-validated with 373 automated tests, 35 static rules over 38 scenarios and four authorized field
-assessments that produced 51 findings, one critical and three high. Run on three of those
-targets' published bundles, the same rules raised 20 alerts, none of them the four severe
-authorization flaws. The monitoring and SSH stages were not exercised in the field.
+evaluated. ShadowGuardAI combines local static analysis with authorized assessment of the
+published application, maps every finding to CWE, OWASP Top 10 and CWE Top 25, and refuses active
+action without signed rules of engagement. The prototype was validated with 373 automated tests,
+35 static rules over 38 scenarios and four authorized field assessments that produced 51
+findings, one critical and three high. Run on three of those targets' published bundles, the same
+rules raised 20 alerts, none of them the four severe authorization flaws. The monitoring and SSH
+stages were not exercised in the field.
 
 ## Resumo
 
@@ -46,18 +48,17 @@ que o desenvolvedor que aprova uma solução porque ela passou nos testes funcio
 vulnerabilidades no repositório sem perceber. A literatura que mede esse fenômeno não apresenta
 um número único, pois os estudos contabilizam objetos e detectores diferentes.
 
-O primeiro estudo desse tipo, sobre a prévia do GitHub Copilot em agosto de 2021, identificou que
-aproximadamente 40% dos programas gerados eram vulneráveis (Pearce et al., 2021). Trabalhos
-posteriores consideram só a saída funcionalmente correta: no BaxBench, os exploits têm
-sucesso em torno da metade dos programas corretos de cada modelo (Vero et al., 2025), e em 186
-tarefas de nível repositório 79,3% das soluções funcionais do SWE-Agent com Claude 4 Sonnet eram
-inseguras (Zhao et al., 2026). A detecção é o problema prático: o Snyk Code deixou de apontar 64
-programas vulneráveis que os exploits do BaxBench revelaram (Vero et al., 2025), e no
-RealSec-Bench a precisão dos alertas do CodeQL revisados foi de 44,9% em 89 alertas (Wang et al.,
-2026). Além disso, Blain e Noiseux relatam que seis ferramentas estáticas comerciais apontaram 19
-dos 250 artefatos de seu corpus e 2 das 90 vulnerabilidades provadas por testemunhas de
-satisfatibilidade do Z3, o que corresponde a 97,8% de omissão, caracterizada como lacuna
-estrutural e não como problema de configuração (Blain & Noiseux, 2026).
+Sobre a prévia do GitHub Copilot em 2021, aproximadamente 40% dos programas gerados eram
+vulneráveis (Pearce et al., 2021). Trabalhos posteriores consideram só a saída funcionalmente
+correta: no BaxBench, os exploits têm sucesso em torno da metade dos programas corretos de cada
+modelo (Vero et al., 2025), e em 186 tarefas de nível repositório 79,3% das soluções funcionais do
+SWE-Agent com Claude 4 Sonnet eram inseguras (Zhao et al., 2026). A detecção é o problema prático:
+o Snyk Code deixou de apontar 64 programas vulneráveis que os exploits do BaxBench revelaram
+(Vero et al., 2025), e no RealSec-Bench a precisão dos alertas do CodeQL revisados foi de 44,9%
+em 89 alertas (Wang et al., 2026). Além disso, Blain e Noiseux relatam que seis ferramentas
+estáticas comerciais apontaram 19 dos 250 artefatos de seu corpus e 2 das 90 vulnerabilidades
+provadas por testemunhas de satisfatibilidade do Z3, o que corresponde a 97,8% de omissão,
+caracterizada como lacuna estrutural e não como problema de configuração (Blain & Noiseux, 2026).
 
 Em um levantamento não sistemático de 20 fontes, nenhuma avalia a conformidade de código gerado
 por IA contra padrões de código seguro como CWE e OWASP, que aparecem apenas como taxonomias para
@@ -70,11 +71,11 @@ transferência de código do cliente para fora da sua infraestrutura.
 
 O ShadowGuardAI foi construído como prova de conceito iterativa sobre o motor de agente local da
 própria equipe, em ciclos fechados por testes automatizados, e a suíte atual conta com 373 testes.
-O motor opera um modelo local por meio do Ollama (Ollama, 2026), de modo que o código do cliente
-não sai da máquina, e o modelo não executa nada: em uma máquina de estados determinística, escolhe
-um verbo de um catálogo tipado, com leitura, escrita confinada e ações destrutivas sujeitas a
-confirmação humana. O runtime valida a escolha, abstém-se quando a base é insuficiente e registra
-cada etapa em arquivo JSONL append-only, com redação de segredos.
+O motor opera um modelo local via Ollama (Ollama, 2026), de modo que o código não sai da máquina,
+e o modelo não executa nada: em uma máquina de estados determinística, escolhe um verbo de um
+catálogo tipado, com leitura, escrita confinada e ações destrutivas sujeitas a confirmação humana.
+O runtime valida a escolha, abstém-se sem base suficiente e registra cada etapa em JSONL
+append-only, com redação de segredos.
 
 ### Um ciclo de quatro estágios
 
@@ -102,8 +103,8 @@ emita apenas 18 operações de leitura.
 **S4, relatório duplo.** Os achados são normalizados, com CWE, CVSS e evidência, e mapeados para o
 OWASP Top 10 (OWASP Foundation, 2026) e o CWE Top 25 (MITRE, 2026); sem referência a arquivo e
 linha, ou à requisição e resposta com hash, o achado é relatado como hipótese, e o que não foi
-testado é declarado. O usuário recebe um relatório conciso, a TI recebe um relatório completo com
-manifesto de evidência sha256, e o reteste fecha o ciclo.
+testado é declarado. O usuário recebe um relatório conciso, a TI um completo com manifesto sha256,
+e o reteste fecha o ciclo.
 
 ### Modelo de ameaça
 
@@ -129,16 +130,17 @@ documentado e consentimento conforme a LGPD.
 Em laboratório, 373 testes automatizados cobrem o portão do ROE, o redactor de log, o cofre de
 credenciais e o registro de auditoria; 35 regras de análise estática foram calibradas por 38
 cenários autorais, com recall de 100% e precisão de 100% e nenhum achado em arquivo seguro, e a
-ablação sobre o código da própria ferramenta apontou uma única regra disparando, a de severidade
-informativo para o uso de `console.log`.
+ablação sobre o próprio código apontou uma única regra disparando, a de `console.log` em
+severidade informativo.
 
 Em campo, quatro aplicações publicadas foram avaliadas em regime não destrutivo, sem criação de
 conta e sem alteração de dados, com autorização do responsável em cada caso e anuência para a
 publicação dos resultados agregados, que permanecem anonimizados; duas tiveram regras de
-engajamento documentadas e uma é produto próprio da equipe. Segundo os responsáveis, o desenvolvimento contou com os
-assistentes Claude e Codex, mas a ferramenta não foi registrada por caso, de modo que a
-atribuição dos achados a código gerado por IA permanece indiciária; o intake do produto passou a
-registrar esse contexto. A Tabela 1 resume o escopo exercitado e os 51 achados.
+engajamento documentadas e uma é produto próprio da equipe. Segundo os responsáveis, o
+desenvolvimento contou com os assistentes Claude e Codex, mas a ferramenta não foi registrada por
+caso, de modo que a atribuição dos achados a código gerado por IA permanece indiciária; o intake
+do produto passou a registrar esse contexto. A Tabela 1 resume o escopo exercitado e os 51
+achados.
 
 **Tabela 1.** *Engagements de campo (out.–nov. 2026): escopo exercitado e achados por severidade
 (C, A, M, B, I) — total 1, 3, 10, 18 e 19.*
@@ -160,31 +162,30 @@ o único alerta de severidade alta no backend, a chave publicável embutida no b
 desenho e foi reclassificada na revisão manual. A medição é pequena e sobre código minificado, mas
 mostra, no mesmo corpus, o que a regra aponta e o que a falha explora.
 
-A leitura conjunta revela um padrão que sustenta a proposta. Em três das quatro aplicações, a
-camada de dados estava endurecida: autorização por linha em todas as tabelas testadas,
-armazenamento negando listagem anônima e controle de acesso de objetos recusando leitura sem
-sessão, além de autenticação, proteção contra CSRF e limite de requisições funcionando. As falhas
-concentraram-se na borda de autorização, e não na persistência: funções de API executáveis sem
-autenticação, uma que bloqueia contas alheias e outra que aprova a transferência de patrimônio;
-dados proprietários serializados antes do redirecionamento e devolvidos no corpo da resposta;
-cadastro aberto somado a painel administrativo sem defesa em profundidade; e documento servido
-pela CDN sem cabeçalhos, ainda que a API os enviasse.
+A leitura conjunta sustenta a proposta, e em três das quatro aplicações a camada de dados estava
+endurecida: autorização por linha em todas as tabelas testadas, armazenamento negando listagem
+anônima e controle de acesso de objetos recusando leitura sem sessão, além de autenticação,
+proteção contra CSRF e limite de requisições funcionando. As falhas concentraram-se na borda de
+autorização, e não na persistência: funções de API executáveis sem autenticação, uma que bloqueia
+contas alheias e outra que aprova a transferência de patrimônio; dados proprietários serializados
+antes do redirecionamento e devolvidos no corpo da resposta; cadastro aberto somado a painel
+administrativo sem defesa em profundidade; e documento servido pela CDN sem cabeçalhos, ainda que
+a API os enviasse.
 
 Esse resultado é consistente com a lacuna estrutural relatada pela literatura (Blain & Noiseux,
 2026): o achado crítico e os três altos são falhas de autorização e de desenho, classificadas como
-CWE-862, CWE-285 e CWE-200, e nenhum corresponde a um padrão coberto pelas 35 regras. A detecção
-útil veio da superfície publicada, do bundle e da prova de conceito controlada, e não do
-verificador de padrões. Os quatro relatórios saíram por um único operador, três no mesmo dia e um
-no dia seguinte.
+CWE-862, CWE-285 e CWE-200, e nenhum corresponde a um padrão coberto pelas 35 regras; a detecção
+veio da superfície, do bundle e da prova de conceito. Os relatórios saíram por um único operador,
+em até um dia.
 
 ### Limitações
 
-O conjunto de evidências tem limites declarados. Os casos são quatro, auto-selecionados, de ramos
-distintos e com escalas de severidade heterogêneas (apenas um aplicou CVSS); um é produto próprio e a origem de geração foi apenas declarada, sem registro por caso; dois não tiveram sessão autenticada, de modo
-que falhas internas ao app logado permanecem não testadas; e a cobertura é reportada em lugar do
-recall de campo. Os cenários do bench são autorais, e falhas de desenho (A04 do OWASP Top 10) não
-são detectáveis por análise estática. Próximos passos: monitoramento e SSH em host próprio, teste do portão com modelo adversarial e
-medição das regras com CWEval (Peng et al., 2025).
+Os limites são explícitos. Os casos são quatro, auto-selecionados, de ramos distintos, com escalas
+de severidade heterogêneas (só um aplicou CVSS); um é produto próprio, a origem foi apenas
+declarada e dois não tiveram sessão autenticada, de modo que falhas internas ao app logado
+permanecem não testadas; a cobertura é reportada em lugar do recall. Os cenários do bench são
+autorais, e falhas de desenho (A04) escapam à análise estática; os próximos passos são
+monitoramento e SSH locais, teste adversarial do portão e medição com CWEval (Peng et al., 2025).
 
 ---
 

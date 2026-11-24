@@ -38,10 +38,11 @@
 
 \title{\product{}: Detecção e Pentest Autorizado de Software Gerado por IA}
 
-\author{\fillin{autores}}
+\author{Ian Teixeira Barreiro\inst{1}, Renato de Oliveira Rosa\inst{2}, Étore Braga e Santos\inst{3}}
 
-\address{\fillin{filiação}
-  \email{\fillin{e-mails}}}
+\address{Universidade de São Paulo, \texttt{ian.barreiro@usp.br} \\
+  \inst{2}~Fucape Business School, \texttt{gestor.renatorosa@gmail.com} \\
+  \inst{3}~Universidade Estadual de Campinas, \texttt{etorebes@gmail.com}}
 
 \begin{document}
 
@@ -51,10 +52,7 @@
 AI coding assistants now write a growing share of production code, and studies report that a
 large fraction of it is vulnerable. Off-the-shelf static
 analysis is reported to miss much of that code, and compliance of AI-generated code against
-secure coding standards is rarely evaluated. This pitch presents ShadowGuardAI, a service that
-combines local static analysis with authorized assessment of the published application, maps
-every finding to CWE, OWASP Top 10 and CWE Top 25, and refuses any active action without a
-signed rules of engagement. The prototype was validated with 373 automated tests, 35 static
+secure coding standards is rarely evaluated. ShadowGuardAI combines local static analysis with authorized assessment of the published application, maps every finding to CWE, OWASP Top 10 and CWE Top 25, and refuses active action without signed rules of engagement. The prototype was validated with 373 automated tests, 35 static
 rules over 38 scenarios and four authorized field assessments that produced 51 findings, one
 critical and three high. Run on three of those targets' published bundles, the same rules
 raised 20 alerts, none of them the four severe authorization flaws. The monitoring and SSH stages were not exercised in the field.
@@ -82,8 +80,7 @@ modo que o desenvolvedor que aprova uma solução porque ela passou nos testes f
 deixar vulnerabilidades no repositório sem perceber. A literatura que mede esse fenômeno não
 apresenta um número único, pois os estudos contabilizam objetos e detectores diferentes.
 
-O primeiro estudo desse tipo, sobre a prévia do GitHub Copilot em agosto de 2021, identificou
-que aproximadamente 40\% dos programas gerados eram vulneráveis~\cite{pearce2021asleep}.
+Sobre a prévia do GitHub Copilot em 2021, aproximadamente 40\% dos programas gerados eram vulneráveis~\cite{pearce2021asleep}.
 Trabalhos posteriores consideram só a saída funcionalmente correta: no BaxBench, os
 exploits têm sucesso em torno da metade dos programas corretos de cada modelo
 ~\cite{vero2025baxbench}, e em 186 tarefas de nível repositório 79,3\% das soluções funcionais
@@ -106,8 +103,7 @@ transferência de código do cliente para fora da sua infraestrutura.
 
 \product{} foi construído como prova de conceito iterativa sobre o motor de agente local da
 própria equipe, em ciclos fechados por testes automatizados, e a suíte atual conta com 373
-testes. O motor opera um modelo local por meio do
-Ollama~\cite{ollama}, de modo que o código do cliente não sai da máquina, e o modelo não
+testes. O motor opera um modelo local via Ollama~\cite{ollama}, de modo que o código não sai da máquina, e o modelo não
 executa nada: em uma máquina de estados determinística, escolhe um verbo de um catálogo
 tipado, com leitura, escrita confinada e ações destrutivas sujeitas a confirmação humana. O
 runtime valida a escolha, abstém-se sem base suficiente e registra cada etapa em
@@ -115,7 +111,7 @@ JSONL append-only, com redação de segredos.
 
 \begin{figure}[t]
 \centering
-\includegraphics[width=0.66\textwidth]{figs/architecture.pdf}
+\includegraphics[width=0.74\textwidth]{figs/architecture.pdf}
 \caption{Ciclo de quatro estágios do \product{} e seus atores. As regiões tracejadas são
 limites de confiança, o bloco pontilhado é opcional e A1 a A7 são os adversários do modelo de
 ameaça.}
@@ -142,8 +138,7 @@ apenas 18 operações de leitura. \emph{S4, relatório duplo.} Os achados são n
 CWE, CVSS e evidência, e mapeados para o OWASP Top 10~\cite{owasp2025top10} e o CWE
 Top 25~\cite{mitre2025cwetop25}; sem referência a arquivo e linha, ou à requisição e resposta
 com hash, o achado é relatado como hipótese, e o que não foi testado é declarado. O usuário
-recebe um relatório conciso, a TI recebe um relatório completo com manifesto de evidência
-sha256, e o reteste fecha o ciclo.
+recebe um relatório conciso, a TI um completo com manifesto sha256, e o reteste fecha o ciclo.
 
 \textbf{Modelo de ameaça.} Seguindo a classificação STRIDE por
 componente~\cite{shostack2014threat}, consideram-se o modelo local adulterado (A1), conteúdo
@@ -203,7 +198,7 @@ bundle, é pública por desenho e foi reclassificada na revisão manual. A medi�
 sobre código minificado, mas mostra, no mesmo corpus, o que a regra aponta e o que a falha
 explora.
 
-A leitura conjunta sustenta a proposta. Em três das quatro aplicações, a
+A leitura conjunta sustenta a proposta, e em três das quatro aplicações a
 camada de dados estava endurecida: autorização por linha em todas as tabelas
 testadas, armazenamento negando listagem anônima e controle de acesso de objetos recusando
 leitura sem sessão, além de autenticação, proteção contra CSRF e limite de requisições
@@ -216,16 +211,15 @@ profundidade; e documento servido pela CDN sem cabeçalhos, ainda que a API os e
 Esse resultado é consistente com a lacuna estrutural relatada pela
 literatura~\cite{blain2026broken}: o achado crítico e os três altos são falhas de autorização e
 de desenho, classificadas como CWE-862, CWE-285 e CWE-200, e nenhum corresponde a um padrão
-coberto pelas 35 regras. A detecção útil veio da superfície publicada, do bundle e da prova de
-conceito controlada, e não do verificador de padrões. Os quatro relatórios saíram por um único
-operador, três no mesmo dia e um no dia seguinte.
+coberto pelas 35 regras; a detecção veio da superfície, do bundle e da prova de conceito. Os
+relatórios saíram por um único operador, em até um dia.
 
-Os limites são declarados. Os casos são quatro, auto-selecionados, de
-ramos distintos e com escalas de severidade heterogêneas (apenas um aplicou CVSS); um é
-produto próprio e nenhum teve a origem de geração por IA registrada; dois não tiveram sessão
-autenticada, de modo que falhas internas ao app logado permanecem não testadas; e a cobertura
-é reportada em lugar do recall de campo. Os cenários do bench são autorais, e falhas de desenho (A04 do OWASP Top 10) não são detectáveis por análise estática. Próximos passos: monitoramento e SSH em host próprio, teste do portão com modelo adversarial e
-medição das regras com CWEval~\cite{peng2025cweval}.
+Os limites são explícitos. Os casos são quatro, auto-selecionados, de ramos distintos, com escalas
+de severidade heterogêneas (só um aplicou CVSS); um é produto próprio, a origem foi
+apenas declarada e dois não tiveram sessão autenticada, de modo que falhas internas ao app logado
+permanecem não testadas; a cobertura é reportada em lugar do recall. Os cenários do bench são
+autorais, e falhas de desenho (A04) escapam à análise estática; os próximos passos são
+monitoramento e SSH locais, teste adversarial do portão e medição com CWEval~\cite{peng2025cweval}.
 
 \bibliographystyle{sbc}
 \bibliography{references}
